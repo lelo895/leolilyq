@@ -1277,7 +1277,7 @@ const galleryData = [
     type: 'video',
     category: 'videos',
     src: 'images/Portfolio Imgs/Imgs/lock_down_poster.webp',
-    videoSrc: 'images/Portfolio Imgs/vid/lock_down.webm',
+    videoSrc: 'images/Portfolio Imgs/vid/lock_down_small.mp4',
     title: 'Lock Down',
     description: 'A short film made in Fall 2025. The story follows a CEO who becomes trapped in his own company\'s self-driving car on the day of a critical shareholder meeting.<br><br>Directed by Danny Allen.',
     roles: 'Cinematographer, Editor',
