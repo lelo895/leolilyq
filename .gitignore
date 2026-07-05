@@ -20,8 +20,8 @@ node_modules/
 
 # (Images and Videos are tracked for Vercel deployment)
 # Note: Files > 100MB must still be excluded or compressed for GitHub
-images/Portfolio\ Imgs/vid/0727.webm
-images/Portfolio\ Imgs/vid/lock_down.webm
+public/images/Portfolio\ Imgs/vid/0727.webm
+public/images/Portfolio\ Imgs/vid/lock_down.webm
 
 # Exclude virtual environments and large binaries
 scratch/
