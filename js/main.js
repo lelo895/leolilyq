@@ -12,7 +12,7 @@ gsap.registerPlugin(CustomEase, CustomBounce);
    PORTFOLIO ENGINE & INTERACTIONS
    ========================================================================== */
 
-document.addEventListener('DOMContentLoaded', () => {
+export function initVanillaApp() {
 
 
   // DOM Elements
@@ -1420,7 +1420,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-});
 
 // macOS Live Time Logic (Pacific Time)
 function updateMacTime() {
@@ -1444,72 +1443,8 @@ function updateMacTime() {
 updateMacTime();
 setInterval(updateMacTime, 60000);
 
-// Laptop Drag Interaction
-(function () {
-  const frame = document.querySelector('.laptop-frame');
-  if (!frame) return;
 
-  let isDragging = false;
-  let startX = 0, startY = 0;
-  let currentX = 0, currentY = 0;
-
-  function setTransform(dx, dy) {
-    frame.style.transform = `translate(${dx}px, ${dy}px)`;
-  }
-
-  frame.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.clientX - currentX;
-    startY = e.clientY - currentY;
-    frame.classList.add('dragging');
-    e.preventDefault();
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    currentX = e.clientX - startX;
-    currentY = e.clientY - startY;
-    setTransform(currentX, currentY, true);
-  });
-
-  document.addEventListener('mouseup', () => {
-    if (!isDragging) return;
-    isDragging = false;
-    currentX = 0;
-    currentY = 0;
-    frame.classList.remove('dragging');
-    // Spring back — must yield a frame so the transition re-enables before the value changes
-    requestAnimationFrame(() => setTransform(0, 0));
-  });
-
-  // Touch support
-  frame.addEventListener('touchstart', (e) => {
-    const t = e.touches[0];
-    isDragging = true;
-    startX = t.clientX - currentX;
-    startY = t.clientY - currentY;
-    frame.classList.add('dragging');
-  }, { passive: true });
-
-  document.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    const t = e.touches[0];
-    currentX = t.clientX - startX;
-    currentY = t.clientY - startY;
-    setTransform(currentX, currentY, true);
-  }, { passive: true });
-
-  document.addEventListener('touchend', () => {
-    if (!isDragging) return;
-    isDragging = false;
-    currentX = 0;
-    currentY = 0;
-    frame.classList.remove('dragging');
-    requestAnimationFrame(() => setTransform(0, 0));
-  });
-})();
 // Mobile Photo Slider Logic
-document.addEventListener('DOMContentLoaded', () => {
   const photoTrack = document.getElementById('photos-track-wrapper');
   const photoPrev = document.getElementById('photo-slider-prev');
   const photoNext = document.getElementById('photo-slider-next');
@@ -1551,4 +1486,4 @@ document.addEventListener('DOMContentLoaded', () => {
       observer.observe(photosGrid, { childList: true });
     }
   }
-});
+}

@@ -1187,7 +1187,7 @@ body.dark-mode .profile-name {
 
 .about-main-content {
   padding: var(--space-2xl) var(--space-xl);
-  overflow: hidden;
+  overflow: visible;
 }
 
 @media (max-width: 850px) {
@@ -2748,7 +2748,7 @@ body.dark-mode .ticket-notch-right {
 
 @media (max-width: 1024px), (max-width: 1366px) and (hover: none) {
   #canvas-container {
-    padding: 60px 0 0 0 !important;
+    padding: 85px 0 0 0 !important;
     align-items: stretch;
     overflow-y: auto;
   }
@@ -2756,6 +2756,7 @@ body.dark-mode .ticket-notch-right {
   .top-left-brand {
     top: 20px !important;
     left: 20px !important;
+    z-index: 3001 !important;
   }
 
   .top-right-controls {
@@ -2770,9 +2771,9 @@ body.dark-mode .ticket-notch-right {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 60px !important;
+    height: 85px !important;
     background: var(--bg-color);
-    z-index: 2400;
+    z-index: 3000 !important;
     pointer-events: none;
   }
 
@@ -2783,8 +2784,16 @@ body.dark-mode .ticket-notch-right {
     transform: scale(1) rotate(0deg) translate(0) !important;
   }
 
-  .left-page .page-content-wrapper,
-  .right-page .page-content-wrapper {
+  /* Override global zoomed states hiding the opposite page on mobile */
+  body.journal-active #notebook-container.state-zoomed-left .right-page .page-content-wrapper,
+  body.journal-active #notebook-container.state-zoomed-right .left-page .page-content-wrapper {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  #notebook-container .notebook .left-page .page-content-wrapper,
+  #notebook-container .notebook .right-page .page-content-wrapper {
     transform: none !important;
     position: relative !important;
     top: auto !important;
@@ -2797,18 +2806,18 @@ body.dark-mode .ticket-notch-right {
     display: none !important;
   }
 
-  body[data-mobile-tab="nature"] .left-page .portfolio-view,
-  body[data-mobile-tab="people"] .left-page .portfolio-view,
-  body[data-mobile-tab="photowalk"] .left-page .portfolio-view {
+  body[data-mobile-tab="nature"] #notebook-container .notebook .left-page .portfolio-view,
+  body[data-mobile-tab="people"] #notebook-container .notebook .left-page .portfolio-view,
+  body[data-mobile-tab="photowalk"] #notebook-container .notebook .left-page .portfolio-view {
     display: flex !important;
   }
 
-  body[data-mobile-tab="videos"] .right-page .portfolio-view {
+  body[data-mobile-tab="videos"] #notebook-container .notebook .right-page .portfolio-view {
     display: flex !important;
   }
 
-  body[data-mobile-tab="about"] .left-page .about-view,
-  body[data-mobile-tab="about"] .right-page .about-view {
+  body[data-mobile-tab="about"] #notebook-container .notebook .left-page .about-view,
+  body[data-mobile-tab="about"] #notebook-container .notebook .right-page .about-view {
     display: flex !important;
   }
 
@@ -2830,11 +2839,23 @@ body.dark-mode .ticket-notch-right {
     max-height: none !important;
     margin: 0 !important;
     box-shadow: none !important;
+    overflow: visible !important;
   }
 
-  .notebook {
+  /* Mobile About Stacked Layout */
+  body[data-mobile-tab="about"] .right-page {
+    margin-top: 40px;
+  }
+  
+  body[data-mobile-tab="about"] .right-page .page-paper {
+    border-top: 1px dashed rgba(0, 0, 0, 0.2) !important;
+  }
+
+  body.journal-active #notebook-container .notebook {
     flex-direction: column;
-    min-height: calc(100vh - 60px);
+    height: auto !important;
+    min-height: calc(100vh - 60px) !important;
+    max-height: none !important;
     border-radius: 0 !important;
     border-width: 0 !important;
   }
@@ -2845,6 +2866,7 @@ body.dark-mode .ticket-notch-right {
 
   .notebook-page {
     width: 100%;
+    height: auto !important;
     min-height: auto;
   }
 
@@ -2854,6 +2876,7 @@ body.dark-mode .ticket-notch-right {
     border: none !important;
     margin: 0 !important;
     border-radius: 0 !important;
+    height: auto !important;
     min-height: calc(100vh - 60px);
   }
 
@@ -3517,6 +3540,14 @@ body.dark-mode .top-tab.active {
   .about-view .about-main-content {
     height: auto !important;
     overflow: visible !important;
+    display: block !important;
+  }
+
+  .resume-section, .timeline, .timeline-item {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    height: auto !important;
   }
 
   body.journal-active .notebook-container.show-about-container .notebook {
@@ -3850,10 +3881,6 @@ body.dark-mode .top-tab.active {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
-}
-
-.item-wrapper.has-been-dragged .drag-tooltip {
-  display: none !important;
 }
 
 .mahjong-wrapper {
@@ -4300,7 +4327,7 @@ body.dark-mode .top-tab.active {
     padding: var(--space-xl) var(--space-md);
     border: none;
     height: auto !important;
-    min-height: auto !important;
+    min-height: calc(100vh - 60px) !important;
   }
 
   body.journal-active .notebook-container.state-zoomed-left,
@@ -4651,21 +4678,6 @@ a:focus-visible,
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease;
 }
 
-/* Overriding Drag Tooltip to be smooth */
-.drag-tooltip {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transform: translateX(-50%) translateY(10px) !important;
-}
-
-.item-wrapper:hover .drag-tooltip,
-.camera-wrapper:hover .drag-tooltip,
-.journal-wrapper:hover .drag-tooltip {
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: translateX(-50%) translateY(0) !important;
-}
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {

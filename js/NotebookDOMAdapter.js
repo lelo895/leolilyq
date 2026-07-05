@@ -1,6 +1,7 @@
 export default class NotebookDOMAdapter {
   setMobileTab(category) {
     document.body.setAttribute('data-mobile-tab', category);
+    window.dispatchEvent(new CustomEvent('mobileTabSwitched', { detail: { category } }));
   }
   
   zoomLeft() {

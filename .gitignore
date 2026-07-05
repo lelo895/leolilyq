@@ -29,3 +29,5 @@ tools/ffmpeg
 tools/ffmpeg.zip
 __pycache__/
 *.pyc
+images_backup_20260620/
+tools/contact_sheet_*.jpg
