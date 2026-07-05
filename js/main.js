@@ -5,8 +5,8 @@ import Gallery from './Gallery.js';
 import NotebookRouter from './NotebookRouter.js';
 import TicketSlider from './TicketSlider.js';
 import NotebookDOMAdapter from './NotebookDOMAdapter.js';
+
 gsap.registerPlugin(CustomEase, CustomBounce);
-CustomBounce.create("tennisBounce", { strength: 0.6, squash: 2, squashID: "tennisBounce-squash" });
 
 /* ==========================================================================
    PORTFOLIO ENGINE & INTERACTIONS
