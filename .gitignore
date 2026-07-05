@@ -1,0 +1,42 @@
+# Credentials
+.env
+.env.*
+*.pem
+*.key
+*.cert
+credentials.json
+secrets.json
+config.json
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Node
+node_modules/
+
+# Images
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.webp
+images/
+
+# Videos
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
+# Exclude virtual environments and large binaries
+scratch/
+tools/ffmpeg
+tools/ffmpeg.zip
+__pycache__/
+*.pyc
