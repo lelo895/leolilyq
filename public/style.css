@@ -266,7 +266,7 @@ body.journal-active .notebook-container.state-zoomed-right .left-page .page-cont
   background: linear-gradient(to right, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.0) 25%, rgba(0, 0, 0, 0.0) 75%, rgba(0, 0, 0, 0.12) 100%);
   z-index: 10;
   pointer-events: none;
-  contain: layout paint;
+  contain: layout;
   border-left: 1px dashed rgba(0, 0, 0, 0.05);
   border-right: 1px dashed rgba(0, 0, 0, 0.05);
 }
@@ -2211,6 +2211,7 @@ body.journal-active .btn-back-journal {
   align-items: flex-end;
   gap: 12px;
   z-index: 10;
+  contain: layout;
 }
 
 .divider-tabs.right-tabs {
@@ -4556,6 +4557,8 @@ body.dark-mode .top-tab.active {
   position: relative;
   z-index: 2;
   contain: layout;
+  width: 0.8em;
+  text-align: center;
 }
 
 .leo-loader__o-container {
@@ -4608,6 +4611,14 @@ body.dark-mode .top-tab.active {
   transform-origin: center center;
   contain: strict;
 }
+.aperture-blade:nth-child(1) { transform: rotate(0deg) scale(1.1); }
+.aperture-blade:nth-child(2) { transform: rotate(45deg) scale(1.1); }
+.aperture-blade:nth-child(3) { transform: rotate(90deg) scale(1.1); }
+.aperture-blade:nth-child(4) { transform: rotate(135deg) scale(1.1); }
+.aperture-blade:nth-child(5) { transform: rotate(180deg) scale(1.1); }
+.aperture-blade:nth-child(6) { transform: rotate(225deg) scale(1.1); }
+.aperture-blade:nth-child(7) { transform: rotate(270deg) scale(1.1); }
+.aperture-blade:nth-child(8) { transform: rotate(315deg) scale(1.1); }
 
 @media (max-width: 768px) {
   .leo-loader__h1 {
