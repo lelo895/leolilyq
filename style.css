@@ -266,6 +266,7 @@ body.journal-active .notebook-container.state-zoomed-right .left-page .page-cont
   background: linear-gradient(to right, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.0) 25%, rgba(0, 0, 0, 0.0) 75%, rgba(0, 0, 0, 0.12) 100%);
   z-index: 10;
   pointer-events: none;
+  contain: layout paint;
   border-left: 1px dashed rgba(0, 0, 0, 0.05);
   border-right: 1px dashed rgba(0, 0, 0, 0.05);
 }
@@ -4527,6 +4528,7 @@ body.dark-mode .top-tab.active {
   transform: translateY(100px);
   position: relative;
   z-index: 2;
+  contain: layout;
 }
 
 .leo-loader__o-container {
@@ -4577,6 +4579,7 @@ body.dark-mode .top-tab.active {
   background: linear-gradient(to bottom right, var(--blade-grad-1), var(--blade-grad-2));
   clip-path: polygon(50% 50%, 0 0, 100% 0);
   transform-origin: center center;
+  contain: strict;
 }
 
 @media (max-width: 768px) {
