@@ -54,7 +54,7 @@ export default function Notebook() {
                 <aside className="about-sidebar">
 
                   <div className="profile-card">
-                    <img src="images/profile.jpg" alt="Yongqian (Leo) Li Profile Photo" className="profile-img" loading="lazy" />
+                    <img src="/images/profile.jpg" alt="Yongqian (Leo) Li Profile Photo" className="profile-img" loading="lazy" />
                     <h1 className="profile-name">YONGQIAN (LEO) LI 李泳谦</h1>
                     <p className="profile-tagline">Film & Media Major @ UC Irvine</p>
                   </div>
@@ -117,23 +117,23 @@ export default function Notebook() {
                                   </div>
                                   <div className="mac-dock">
                                     <div className="dock-item">
-                                      <img src="images/tools/premierepro.svg" alt="Premiere Pro" />
+                                      <img src="/images/tools/premierepro.svg" alt="Premiere Pro" />
                                       <span className="dock-tooltip">Premiere Pro</span>
                                     </div>
                                     <div className="dock-item">
-                                      <img src="images/tools/davinciresolve.svg" alt="DaVinci Resolve" />
+                                      <img src="/images/tools/davinciresolve.svg" alt="DaVinci Resolve" />
                                       <span className="dock-tooltip">DaVinci Resolve</span>
                                     </div>
                                     <div className="dock-item">
-                                      <img src="images/tools/photoshop.svg" alt="Photoshop" />
+                                      <img src="/images/tools/photoshop.svg" alt="Photoshop" />
                                       <span className="dock-tooltip">Photoshop</span>
                                     </div>
                                     <div className="dock-item">
-                                      <img src="images/tools/lightroom.svg" alt="Lightroom" />
+                                      <img src="/images/tools/lightroom.svg" alt="Lightroom" />
                                       <span className="dock-tooltip">Lightroom</span>
                                     </div>
                                     <div className="dock-item">
-                                      <img src="images/tools/capcut.svg" alt="CapCut" />
+                                      <img src="/images/tools/capcut.svg" alt="CapCut" />
                                       <span className="dock-tooltip">CapCut</span>
                                     </div>
                                   </div>
