@@ -1,6 +1,6 @@
 export default class AudioEngine {
   constructor(strategies = {}) {
-    this.isMuted = localStorage.getItem('portfolio-muted') === 'true';
+    this.isMuted = localStorage.getItem('portfolio-muted') !== 'false';
     this.ctx = null;
     this.strategies = strategies;
   }
@@ -18,6 +18,9 @@ export default class AudioEngine {
     if (!AudioContext) return null;
     try {
       this.ctx = new AudioContext();
+      this.ctx.masterGain = this.ctx.createGain();
+      this.ctx.masterGain.gain.value = 0.3; // Lower overall volume
+      this.ctx.masterGain.connect(this.ctx.destination);
     } catch (e) { }
     return this.ctx;
   }

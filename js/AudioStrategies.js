@@ -6,7 +6,7 @@ export function playConfirmBeep(ctx, t) {
   gain.gain.setValueAtTime(0.02, t);
   gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
   osc.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect((ctx.masterGain || ctx.destination));
   osc.start();
   osc.stop(t + 0.1);
 }
@@ -29,7 +29,7 @@ export function playFlip(ctx, t) {
   gainNode.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
   noise.connect(filter);
   filter.connect(gainNode);
-  gainNode.connect(ctx.destination);
+  gainNode.connect((ctx.masterGain || ctx.destination));
   noise.start(t);
   noise.stop(t + 0.25);
 }
@@ -51,7 +51,7 @@ export function playCapture(ctx, t) {
   gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
   noise.connect(filter);
   filter.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect((ctx.masterGain || ctx.destination));
   noise.start(t);
   noise.stop(t + 0.1);
 }
@@ -77,7 +77,7 @@ export function playThud(ctx, t, options = {}) {
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
     noise.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect((ctx.masterGain || ctx.destination));
     noise.start(t);
     noise.stop(t + 0.1);
   } else if (type === 'mahjong') {
@@ -89,7 +89,7 @@ export function playThud(ctx, t, options = {}) {
     gain.gain.setValueAtTime(vol * 3, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect((ctx.masterGain || ctx.destination));
     osc.start(t);
     osc.stop(t + 0.05);
   } else if (type === 'birdie') {
@@ -105,7 +105,7 @@ export function playThud(ctx, t, options = {}) {
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
     osc.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect((ctx.masterGain || ctx.destination));
     osc.start(t);
     osc.stop(t + 0.05);
   } else if (type === 'dice_roll') {
@@ -123,7 +123,7 @@ export function playThud(ctx, t, options = {}) {
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
     noise.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect((ctx.masterGain || ctx.destination));
     noise.start(t);
     noise.stop(t + 0.15);
   } else if (type === 'tennis') {
@@ -141,12 +141,12 @@ export function playThud(ctx, t, options = {}) {
     noiseFilter.type = 'lowpass';
     noiseFilter.frequency.setValueAtTime(800, t);
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(vol * 1.5, t);
+    gain.gain.setValueAtTime(vol * 0.4, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
     osc.connect(gain);
     noise.connect(noiseFilter);
     noiseFilter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect((ctx.masterGain || ctx.destination));
     osc.start(t);
     osc.stop(t + 0.1);
     noise.start(t);
@@ -160,7 +160,7 @@ export function playThud(ctx, t, options = {}) {
     gain.gain.setValueAtTime(vol, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect((ctx.masterGain || ctx.destination));
     osc.start(t);
     osc.stop(t + 0.1);
   }
@@ -184,7 +184,7 @@ export function playTransition(ctx, t) {
   gain.gain.linearRampToValueAtTime(0, t + 0.8);
   noise.connect(filter);
   filter.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect((ctx.masterGain || ctx.destination));
   noise.start(t);
   noise.stop(t + 0.8);
 }
@@ -198,7 +198,7 @@ export function playBirdieFall(ctx, t) {
   gain.gain.setValueAtTime(0.03, t);
   gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
   osc.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect((ctx.masterGain || ctx.destination));
   osc.start(t);
   osc.stop(t + 0.4);
 }
@@ -207,7 +207,7 @@ export function playAppOpen(ctx, t) {
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect((ctx.masterGain || ctx.destination));
   osc.type = 'sine';
   osc.frequency.setValueAtTime(600, t);
   osc.frequency.exponentialRampToValueAtTime(1200, t + 0.1);

@@ -4700,3 +4700,127 @@ a:focus-visible,
   }
 }
 
+/* Mobile About Page Redesign */
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 1024px), (max-width: 1366px) and (hover: none) {
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .notebook-page .page-content-wrapper.about-view.mobile-only {
+    display: block !important;
+  }
+
+  .mobile-skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+    justify-content: center;
+  }
+
+  .paper-cutout-skill {
+    background-color: #fdfbf7;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    box-shadow: 2px 3px 6px rgba(0,0,0,0.1), inset 0 0 20px rgba(0,0,0,0.02);
+    position: relative;
+    pointer-events: none;
+    border-radius: 2px;
+  }
+
+  body.dark-mode .paper-cutout-skill {
+    background-color: var(--paper-bg);
+    border-color: var(--card-border);
+    box-shadow: 2px 3px 6px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.02);
+  }
+
+  .paper-cutout-skill:nth-child(even) {
+    transform: rotate(2deg);
+  }
+
+  .paper-cutout-skill:nth-child(odd) {
+    transform: rotate(-3deg);
+  }
+  
+  .paper-cutout-skill:nth-child(3n) {
+    transform: rotate(1deg);
+  }
+
+  .paper-cutout-skill img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+  }
+
+  .paper-cutout-skill span {
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    color: var(--ink-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Pins */
+  .pin {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset -1px -1px 3px rgba(0,0,0,0.2), inset 1px 1px 3px rgba(255,255,255,0.6);
+    z-index: 2;
+  }
+
+  .pin-red { background: radial-gradient(circle at 30% 30%, #ff5e5e, #c70000); }
+  .pin-blue { background: radial-gradient(circle at 30% 30%, #5ec3ff, #006ec7); }
+  .pin-yellow { background: radial-gradient(circle at 30% 30%, #ffda5e, #c79c00); }
+  .pin-green { background: radial-gradient(circle at 30% 30%, #5eff8e, #00c735); }
+}
+
+/* Force mobile about page to expand all the way down and prevent clipping */
+@media (max-width: 1024px), (max-width: 1366px) and (hover: none) {
+  /* The entire clipping chain: body → #canvas-container → notebook. All three must be unlocked. */
+  body[data-mobile-tab="about"] {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  body[data-mobile-tab="about"] #canvas-container {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow: visible !important;
+    position: relative !important;
+  }
+
+  body[data-mobile-tab="about"] #notebook-container,
+  body[data-mobile-tab="about"] #notebook-container .notebook,
+  body[data-mobile-tab="about"] #notebook-container .notebook-page,
+  body[data-mobile-tab="about"] #notebook-container .page-paper {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body[data-mobile-tab="about"] #notebook-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body[data-mobile-tab="about"] #notebook-container .page-paper {
+    padding-bottom: 80px !important;
+  }
+}

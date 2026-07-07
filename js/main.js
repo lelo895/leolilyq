@@ -1051,6 +1051,7 @@ export function initVanillaApp() {
       if (detailsModal) {
         detailsModal.classList.add('is-open');
         detailsModal.setAttribute('aria-hidden', 'false');
+        detailsModal.removeAttribute('inert');
         if (closeDetails) {
           setTimeout(() => closeDetails.focus(), 80);
         }
@@ -1079,6 +1080,7 @@ export function initVanillaApp() {
       if (detailsModal) {
         detailsModal.classList.remove('is-open');
         detailsModal.setAttribute('aria-hidden', 'true');
+        detailsModal.setAttribute('inert', 'true');
         if (lastActiveElement) {
           setTimeout(() => lastActiveElement.focus(), 80);
         }
