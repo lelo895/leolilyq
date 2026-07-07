@@ -105,8 +105,6 @@ img {
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-color);
-  background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
   color: var(--ink-primary);
   height: 100vh;
   width: 100vw;
@@ -1709,14 +1707,12 @@ body.dark-mode .dice {
   z-index: 1000;
   transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1),
     opacity 0.8s ease,
-    visibility 0.8s ease,
-    backdrop-filter 0.8s ease;
+    visibility 0.8s ease;
   overflow: hidden;
-  backdrop-filter: blur(8px);
 }
 
 body.journal-active #splash-screen {
-  filter: blur(3px);
+  opacity: 0.15;
   pointer-events: none;
   z-index: 0;
 }
@@ -3850,8 +3846,8 @@ body.dark-mode .top-tab.active {
   top: 0;
   transform: translateY(-2000px);
   /* Hide off-screen until physics engine starts */
-  transition: filter 0.8s ease, opacity 0.8s ease;
-  will-change: transform, filter;
+  transition: opacity 0.8s ease;
+  will-change: transform;
 }
 
 .item-wrapper:hover:not(:active):not(.has-been-dragged) > * {
@@ -3863,14 +3859,9 @@ body.dark-mode .top-tab.active {
   /* Hide book off-screen until physics engine starts */
 }
 
-#splash-screen {
-  will-change: filter, opacity;
-}
-
 
 #splash-screen.focus-journal .item-wrapper:not(#journal-trigger) {
-  filter: blur(8px);
-  opacity: 0.3;
+  opacity: 0.15;
   pointer-events: none;
 }
 

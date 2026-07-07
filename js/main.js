@@ -98,19 +98,28 @@ export function initVanillaApp() {
 
   const spotlightOverlay = document.getElementById('spotlight-overlay');
 
+  let _prevCursorX = 0;
+  let _prevCursorY = 0;
   function updateCursorAndParallax() {
     const ease = 0.15;
     cursorX += (mouseX - cursorX) * ease;
     cursorY += (mouseY - cursorY) * ease;
 
-    if (spotlightOverlay) {
-      spotlightOverlay.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-    }
+    const dx = cursorX - _prevCursorX;
+    const dy = cursorY - _prevCursorY;
+    if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+      _prevCursorX = cursorX;
+      _prevCursorY = cursorY;
 
-    if (pegboardCanvas) {
-      const parallaxX = (cursorX - window.innerWidth / 2) * 0.01;
-      const parallaxY = (cursorY - window.innerHeight / 2) * 0.01;
-      pegboardCanvas.style.transform = `translate3d(${parallaxX}px, ${parallaxY}px, 0)`;
+      if (spotlightOverlay) {
+        spotlightOverlay.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+      }
+
+      if (pegboardCanvas) {
+        const parallaxX = (cursorX - window.innerWidth / 2) * 0.01;
+        const parallaxY = (cursorY - window.innerHeight / 2) * 0.01;
+        pegboardCanvas.style.transform = `translate3d(${parallaxX}px, ${parallaxY}px, 0)`;
+      }
     }
     requestAnimationFrame(updateCursorAndParallax);
   }
@@ -1461,7 +1470,8 @@ setInterval(updateMacTime, 60000);
     };
 
     photoTrack.addEventListener('scroll', updatePhotoArrows);
-    window.addEventListener('resize', updatePhotoArrows);
+    const _photoResizeObs = new ResizeObserver(updatePhotoArrows);
+    _photoResizeObs.observe(photoTrack);
 
     photoPrev.addEventListener('click', () => {
       // 220px photo + 16px gap
