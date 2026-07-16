@@ -31,3 +31,5 @@ __pycache__/
 *.pyc
 images_backup_20260620/
 tools/contact_sheet_*.jpg
+dist/images/Portfolio Imgs/vid/0727.webm
+dist/images/Portfolio Imgs/vid/lock_down.webm
