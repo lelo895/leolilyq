@@ -205,6 +205,13 @@ export function initVanillaApp() {
                 const delay = Math.min(index, 10) * 0.08;
                 el.style.animationDelay = `${delay}s`;
                 el.classList.add('animate-in');
+                // Fallback: if CSS animation fails (e.g. hardware accel off),
+                // force visibility after the animation would have completed.
+                const totalMs = (delay + 0.65) * 1000;
+                setTimeout(() => {
+                  el.style.opacity = '1';
+                  el.style.transform = 'translateY(0) scale(1)';
+                }, totalMs);
               });
             });
           };
@@ -242,6 +249,9 @@ export function initVanillaApp() {
 
     gallery.reset();
     if (notebook) notebook.classList.remove('show-about');
+    const _nc = document.getElementById('notebook-container');
+    if (_nc) _nc.classList.remove('show-about-container');
+    if (canvasContainer) canvasContainer.classList.remove('about-open');
 
     // Step 1: Use native CSS transition to un-zoom and un-rotate back to portrait
     notebookContainer.className = 'notebook-container state-open-blank';
@@ -1221,6 +1231,19 @@ export function initVanillaApp() {
 
   // About Page flip logic
   const notebook = document.querySelector('.notebook');
+  const notebookContainerEl = document.getElementById('notebook-container');
+
+  function openAboutState() {
+    notebook.classList.add('show-about');
+    notebookContainerEl.classList.add('show-about-container');
+    if (canvasContainer) canvasContainer.classList.add('about-open'); // unclip overflow
+  }
+
+  function closeAboutState() {
+    notebook.classList.remove('show-about');
+    notebookContainerEl.classList.remove('show-about-container');
+    if (canvasContainer) canvasContainer.classList.remove('about-open');
+  }
 
   function doPageFlip(direction, onMidpoint) {
     if (document.querySelector('.flipping-page-container')) return false; // already flipping
@@ -1246,11 +1269,9 @@ export function initVanillaApp() {
       } else {
         // Default: About Me toggle
         if (direction === 'next') {
-          notebook.classList.add('show-about');
-          document.getElementById('notebook-container').classList.add('show-about-container');
+          openAboutState();
         } else {
-          notebook.classList.remove('show-about');
-          document.getElementById('notebook-container').classList.remove('show-about-container');
+          closeAboutState();
         }
       }
     }, 500);

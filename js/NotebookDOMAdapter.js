@@ -68,6 +68,10 @@ export default class NotebookDOMAdapter {
   removeShowAbout() {
     const notebook = document.querySelector('.notebook');
     if (notebook) notebook.classList.remove('show-about');
+    const nc = document.getElementById('notebook-container');
+    if (nc) nc.classList.remove('show-about-container');
+    const cc = document.getElementById('canvas-container');
+    if (cc) cc.classList.remove('about-open');
   }
 
   isShowingAbout() {

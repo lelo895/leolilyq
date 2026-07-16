@@ -3401,12 +3401,23 @@ body.dark-mode .about-view-wrapper::-webkit-scrollbar-thumb {
 
 body.journal-active .notebook-container.show-about-container {
   transform: scale(0.85) rotate(0deg) translateY(3vh) !important;
+  -webkit-transform: scale(0.85) rotate(0deg) translateY(3vh) !important;
+}
+
+/* Unclip canvas when about is open — class added via JS */
+#canvas-container.about-open {
+  overflow: visible !important;
 }
 
 body.journal-active .notebook-container.show-about-container .notebook {
+  /* Size notebook to fit the actual window, not its 1300px natural height.
+     min() is widely supported (Chrome 79, Firefox 75, Safari 11.1).
+     88vh = 88% of window height at any window size (windowed or fullscreen). */
+  height: min(88vh, 820px) !important;
   min-height: 500px !important;
-  height: 90vh !important;
-  max-height: 850px !important;
+  max-height: 820px !important;
+  box-sizing: border-box !important;
+  -webkit-box-sizing: border-box !important;
 }
 
 body.journal-active .notebook-container.show-about-container .right-page .page-content-wrapper,
@@ -4258,8 +4269,7 @@ body.dark-mode .top-tab.active {
 .scrapbook-photo,
 .movie-ticket {
   opacity: 0;
-  translate: 0 20px;
-  scale: 0.96;
+  transform: translateY(20px) scale(0.96);
 }
 
 .scrapbook-photo.animate-in,
@@ -4268,10 +4278,13 @@ body.dark-mode .top-tab.active {
 }
 
 @keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
   to {
     opacity: 1;
-    translate: 0 0;
-    scale: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -4481,10 +4494,13 @@ body.dark-mode .top-tab.active {
   }
 }
 
-/* Fix about me page rotation override */
 @media (min-width: 1025px) and (hover: hover), (min-width: 1367px) {
   body.journal-active .notebook-container.show-about-container {
     transform: scale(0.95) rotate(0deg) translateY(0%) !important;
+    -webkit-transform: scale(0.95) rotate(0deg) translateY(0%) !important;
+  }
+  body.journal-active .notebook-container.show-about-container .notebook {
+    height: min(88vh, 820px) !important;
   }
 }
 
