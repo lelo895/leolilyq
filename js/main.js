@@ -5,6 +5,7 @@ import Gallery from './Gallery.js';
 import NotebookRouter from './NotebookRouter.js';
 import TicketSlider from './TicketSlider.js';
 import NotebookDOMAdapter from './NotebookDOMAdapter.js';
+import { galleryData } from '../src/data/gallery-data.js';
 
 gsap.registerPlugin(CustomEase, CustomBounce);
 
@@ -615,8 +616,7 @@ export function initVanillaApp() {
 
   function updateCenteredJournalPosition(isResizeEvent = false) {
     const splash = document.getElementById('splash-screen');
-    const isHome = !document.body.classList.contains('journal-active');
-    const isFocusedOrCentered = splashState === 'centered' || (splash && splash.classList.contains('focus-journal')) || isHome;
+    const isFocusedOrCentered = splashState === 'centered' || (splash && splash.classList.contains('focus-journal'));
     if (journalTrigger && isFocusedOrCentered) {
       const journalWidth = 280;
       const journalHeight = 380;
@@ -646,6 +646,32 @@ export function initVanillaApp() {
       }
     }, 150);
   });
+
+  function uncenterJournal() {
+    if (splashState !== 'centered') return;
+
+    splashState = 'falling';
+    audioEngine.play('transition');
+
+    const splash = document.getElementById('splash-screen');
+    if (splash) splash.classList.remove('focus-journal');
+
+    if (splashItemInfo) splashItemInfo.classList.remove('visible');
+    if (splashGuide) splashGuide.classList.remove('visible');
+    if (splashClose) splashClose.classList.remove('visible');
+
+    const splashPrompt = document.querySelector('.splash-prompt');
+    if (splashPrompt) splashPrompt.style.opacity = '1';
+
+    clearTimeout(infoTimer);
+    clearTimeout(guideTimer);
+
+    if (journalTrigger) {
+      journalTrigger.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+    }
+
+    splashPhysics.start();
+  }
 
   function centerJournal() {
     if (splashState !== 'falling') return;
@@ -697,6 +723,13 @@ export function initVanillaApp() {
     });
   }
 
+  if (splashClose) {
+    splashClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      uncenterJournal();
+    });
+  }
+
   if (splashGuide) {
     splashGuide.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -711,8 +744,6 @@ export function initVanillaApp() {
       }
     });
   }
-
-
 
   if (boardgameTrigger) {
     boardgameTrigger.addEventListener('click', (e) => {
@@ -759,46 +790,19 @@ export function initVanillaApp() {
     }
   }
 
-
   const splashScreen = document.getElementById('splash-screen');
   if (splashScreen) {
     splashScreen.addEventListener('click', (e) => {
+      if (splashState !== 'centered') return;
+
       if (
-        (lastMousedownTarget && (journalTrigger.contains(lastMousedownTarget) || (cameraTrigger && cameraTrigger.contains(lastMousedownTarget)))) ||
-        (journalTrigger.contains(e.target) || (cameraTrigger && cameraTrigger.contains(e.target)))
+        (journalTrigger && journalTrigger.contains(e.target)) ||
+        (splashItemInfo && splashItemInfo.contains(e.target))
       ) {
         return;
       }
 
-      if (splashState === 'centered') {
-        const clickedClose = splashClose && splashClose.contains(e.target);
-        if (clickedClose || (!journalTrigger.contains(e.target) && (!splashItemInfo || !splashItemInfo.contains(e.target)))) {
-          splashState = 'falling';
-          audioEngine.play('transition');
-          document.getElementById('splash-screen').classList.remove('focus-journal');
-
-          if (splashItemInfo) splashItemInfo.classList.remove('visible');
-          if (splashGuide) splashGuide.classList.remove('visible');
-          if (splashClose) splashClose.classList.remove('visible');
-
-          const splashPrompt = document.querySelector('.splash-prompt');
-          if (splashPrompt) splashPrompt.style.opacity = '1';
-
-          clearTimeout(infoTimer);
-          clearTimeout(guideTimer);
-
-          // Start book falling from current centered position
-          const book = physicsItems.find(i => i.id === 'journal');
-          if (book) {
-            book.x = (window.innerWidth - 280) / 2;
-            book.y = (window.innerHeight - 380) / 2;
-            book.vy = -6; // gentle upward bounce
-          }
-
-          journalTrigger.style.transition = 'none';
-          splashPhysics.start();
-        }
-      }
+      uncenterJournal();
     });
   }
 

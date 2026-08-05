@@ -1,0 +1,122 @@
+:root {
+  --font-serif: 'EB Garamond', 'Noto Serif SC', Georgia, serif;
+  --font-sans: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Typography Scale Tokens */
+  --text-2xs: 0.65rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.5rem;
+
+  /* Cursor / Mouse Tracking Tokens */
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+
+  /* Theme Tokens - Light Mode Default */
+  --bg-color: #d1ccc5;
+  --loader-bg: #f4f0ea;
+  --aperture-blade-grad-1: #333;
+  --aperture-blade-grad-2: #1a1a1a;
+  --blade-grad-1: var(--aperture-blade-grad-1);
+  --blade-grad-2: var(--aperture-blade-grad-2);
+  --spotlight-color: rgba(255, 255, 255, 0.55);
+  --pegboard-dot: #1a1a1a;
+  --ink-primary: oklch(0.20 0.02 260);
+  --ink-secondary: oklch(0.45 0.02 260);
+  --ink-muted: oklch(0.65 0.01 260);
+  --card-bg: oklch(1 0 0);
+  --card-border: oklch(0.92 0.005 260);
+  --card-shadow: rgba(20, 20, 30, 0.08);
+  --card-shadow-hover: rgba(20, 20, 30, 0.18);
+  --overlay-bg: oklch(0.98 0.002 260 / 0.85);
+  --modal-bg: oklch(1 0 0);
+  --modal-border: oklch(0.92 0.005 260);
+  --color-all: oklch(0.35 0.04 260);
+  --color-nature: oklch(0.45 0.05 145);
+  --color-people: oklch(0.55 0.08 45);
+  --color-photowalk: oklch(0.40 0.06 280);
+  --color-videos: oklch(0.45 0.06 240);
+  --color-about: oklch(0.40 0.04 260);
+  --canvas-bg: oklch(0.30 0.03 260);
+  --canvas-dot: rgba(255, 255, 255, 0.1);
+  --leather-color: #4a2e1b;
+  --paper-bg: oklch(0.98 0.002 260);
+
+  /* Transitions Tokens */
+  --transition-smooth: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-expressive: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Unified Z-Index Scale Tokens */
+  --z-base: 0;
+  --z-canvas: 1;
+  --z-surface: 1;
+  --z-overlay-subtle: 2;
+  --z-content: 5;
+  --z-spine: 10;
+  --z-card: 10;
+  --z-decor: 12;
+  --z-tab: 15;
+  --z-sticky: 20;
+  --z-card-hover: 50;
+  --z-card-dragging: 60;
+  --z-header: 100;
+  --z-footer: 100;
+  --z-slider-arrow: 100;
+  --z-modal-backdrop: 500;
+  --z-modal: 600;
+  --z-splash: 1000;
+  --z-splash-active: 1001;
+  --z-splash-info: 1002;
+  --z-header-blur: 1500;
+  --z-brand: 2000;
+  --z-mobile-nav: 2500;
+  --z-mobile-modal: 3001;
+  --z-pin-modal: 4000;
+  --z-cursor: 9999;
+
+  /* Spacing Tokens */
+  --space-2xs: clamp(0.125rem, 0.1vw + 0.1rem, 0.25rem);
+  --space-xs: clamp(0.25rem, 0.2vw + 0.2rem, 0.5rem);
+  --space-sm: clamp(0.5rem, 0.4vw + 0.4rem, 1rem);
+  --space-md: clamp(1rem, 0.8vw + 0.8rem, 1.5rem);
+  --space-lg: clamp(1.5rem, 1.2vw + 1.2rem, 2rem);
+  --space-xl: clamp(2rem, 1.6vw + 1.6rem, 3rem);
+  --space-2xl: clamp(3rem, 2.4vw + 2.4rem, 4rem);
+  --space-3xl: clamp(4rem, 3.2vw + 3.2rem, 6rem);
+}
+
+body.dark-mode {
+  --bg-color: #161311;
+  --loader-bg: #161311;
+  --aperture-blade-grad-1: #e4e4e4;
+  --aperture-blade-grad-2: #9e9e9e;
+  --blade-grad-1: var(--aperture-blade-grad-1);
+  --blade-grad-2: var(--aperture-blade-grad-2);
+  --spotlight-color: rgba(255, 220, 180, 0.08);
+  --pegboard-dot: #1a1a1d;
+  --ink-primary: oklch(0.95 0.01 260);
+  --ink-secondary: oklch(0.75 0.01 260);
+  --ink-muted: oklch(0.55 0.01 260);
+  --card-bg: oklch(0.22 0.02 260);
+  --card-border: oklch(0.26 0.02 260);
+  --card-shadow: rgba(0, 0, 0, 0.35);
+  --card-shadow-hover: rgba(0, 0, 0, 0.55);
+  --overlay-bg: oklch(0.18 0.02 260 / 0.88);
+  --modal-bg: oklch(0.20 0.02 260);
+  --modal-border: oklch(0.25 0.02 260);
+  --color-all: oklch(0.75 0.05 260);
+  --color-nature: oklch(0.80 0.06 145);
+  --color-people: oklch(0.80 0.08 45);
+  --color-photowalk: oklch(0.75 0.06 280);
+  --color-videos: oklch(0.80 0.06 240);
+  --color-about: oklch(0.75 0.05 260);
+  --canvas-bg: oklch(0.12 0.01 260);
+  --canvas-dot: rgba(255, 255, 255, 0.03);
+  --leather-color: #3a2211;
+  --paper-bg: oklch(0.30 0.01 260);
+}

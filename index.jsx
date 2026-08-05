@@ -1,5 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import './src/styles/tokens.css';
+import './src/styles/utilities.css';
 import App from './src/App.jsx';
 import { registerSW } from 'virtual:pwa-register';
 

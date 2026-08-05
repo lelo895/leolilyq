@@ -36,7 +36,7 @@ export default function SplashScreen() {
       {/* Draggable Mahjong */}
       <div className="item-wrapper mahjong-wrapper" id="mahjong-trigger" role="button" tabIndex={0} aria-label="Play with mahjong tile">
         <div className="mahjong-tile">
-          <div className="mahjong-front">發</div>
+          <div className="mahjong-front" lang="zh">發</div>
         </div>
         <div className="drag-tooltip">Mahjong Tile</div>
       </div>
@@ -105,7 +105,7 @@ export default function SplashScreen() {
       </div>
 
       <div className="splash-prompt">
-        <span className="prompt-text">YONGQIAN (LEO) LI</span>
+        <h1 className="prompt-text">YONGQIAN (LEO) LI</h1>
       </div>
     </div>
   );

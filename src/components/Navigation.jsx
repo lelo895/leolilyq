@@ -6,11 +6,11 @@ export default function Navigation() {
       <div className="top-header-blur"></div>
       <div className="top-left-brand">
         <div className="brand-container">
-          <a href="#" className="brand-logo" id="brand-logo">Yongqian (Leo) Li 李泳谦</a>
+          <button type="button" className="brand-logo" id="brand-logo">Yongqian (Leo) Li <span lang="zh">李泳谦</span></button>
           <nav className="brand-nav" id="brand-nav">
-            <a href="#" className="nav-item nav-home" id="nav-home">Home</a>
-            <a href="#" className="nav-item" id="nav-portfolio">Portfolio</a>
-            <a href="#" className="nav-item" id="nav-about">About Me</a>
+            <button type="button" className="nav-item nav-home" id="nav-home">Home</button>
+            <button type="button" className="nav-item" id="nav-portfolio">Portfolio</button>
+            <button type="button" className="nav-item" id="nav-about">About Me</button>
           </nav>
         </div>
       </div>

@@ -70,8 +70,8 @@ export default function Notebook() {
       <aside className="about-sidebar">
         {/* Profile Card */}
         <div className="profile-card">
-          <img src="/images/profile.jpg" alt="Yongqian (Leo) Li Profile Photo" className="profile-img" loading="lazy" />
-          <h1 className="profile-name">YONGQIAN (LEO) LI 李泳谦</h1>
+          <img src="/images/profile.webp" alt="Yongqian (Leo) Li Profile Photo" className="profile-img" width="300" height="300" loading="lazy" />
+          <h1 className="profile-name">YONGQIAN (LEO) LI <span lang="zh">李泳谦</span></h1>
           <p className="profile-tagline">Film & Media Major @ UC Irvine</p>
         </div>
 
@@ -189,8 +189,8 @@ export default function Notebook() {
     <div className="page-content-wrapper about-view">
       <aside className="about-sidebar">
         <div className="profile-card">
-          <img src="/images/profile.jpg" alt="Yongqian (Leo) Li Profile Photo" className="profile-img" loading="lazy" />
-          <h1 className="profile-name">YONGQIAN (LEO) LI 李泳谦</h1>
+          <img src="/images/profile.webp" alt="Yongqian (Leo) Li Profile Photo" className="profile-img" width="300" height="300" loading="lazy" />
+          <h1 className="profile-name">YONGQIAN (LEO) LI <span lang="zh">李泳谦</span></h1>
           <p className="profile-tagline">Film & Media Major @ UC Irvine</p>
         </div>
         <div className="profile-section">

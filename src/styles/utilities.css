@@ -1,0 +1,94 @@
+/* ==========================================================================
+   ACCESSIBILITY & REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Targeted decorative-only animation disabling — preserve functional UI state transitions */
+  .animate-in,
+  #spotlight-overlay,
+  #pegboard-canvas,
+  .category-arrow,
+  .slider-arrow,
+  .theme-toggle-btn:hover,
+  .sound-toggle-btn:hover,
+  .journal-cover,
+  .journal-pen,
+  .bookmark-ribbon,
+  .strap-knot,
+  .kinetic-dots-canvas,
+  .leo-loader__letter,
+  .aperture-blade {
+    animation: none !important;
+  }
+
+  .scrapbook-photo,
+  .movie-ticket {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Functional state transitions retain short duration for UI responsiveness */
+  .notebook-container,
+  .page-content-wrapper,
+  .modal,
+  .modal-backdrop,
+  .sticky-modal-overlay,
+  .sticky-modal-paper,
+  .nav-link,
+  .divider-tab,
+  .brand-logo,
+  body {
+    transition-duration: 0.1s !important;
+  }
+}
+
+/* ==========================================================================
+   IMAGE & MEDIA OPTIMIZATION (Aspect Ratios to Prevent CLS)
+   ========================================================================== */
+
+.photos-grid img,
+.scrapbook-photo img,
+.media-card img,
+.gallery-img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.videos-grid iframe,
+.videos-grid video,
+.ticket-poster-img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.profile-img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* Disable text highlighting/selection on About Me page */
+.about-view,
+.about-view * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.details-description,
+.details-modal-content,
+.copyable-text {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+/* Button Reset helper for semantic buttons */
+button.brand-logo {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
