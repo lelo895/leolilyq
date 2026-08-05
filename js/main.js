@@ -530,6 +530,10 @@ export function initVanillaApp() {
       onComplete: () => {
         leoLoader.style.display = 'none';
         
+        splashState = 'centered';
+        const splash = document.getElementById('splash-screen');
+        if (splash) splash.classList.add('focus-journal');
+
         if (journalTrigger) {
           journalTrigger.style.position = 'absolute';
           journalTrigger.style.left = '0';
@@ -542,20 +546,23 @@ export function initVanillaApp() {
         }
 
         splashPhysics.start();
-
-        splashState = 'centered';
         
-        // Show cover briefly, then open fast
+        // Trigger 3D cover flip animation first, then morph into notebook
         setTimeout(() => {
-          splashState = 'opened';
-          if (typeof openJournal === 'function') {
-            openJournal();
-            setTimeout(() => {
-              const natureTab = document.querySelector('.divider-tab[data-category="nature"]');
-              if (natureTab) natureTab.click();
-            }, 800);
-          }
-        }, 600);
+          const splash = document.getElementById('splash-screen');
+          if (splash) splash.classList.add('opening');
+
+          setTimeout(() => {
+            splashState = 'opened';
+            if (typeof openJournal === 'function') {
+              openJournal();
+              setTimeout(() => {
+                const natureTab = document.querySelector('.divider-tab[data-category="nature"]');
+                if (natureTab) natureTab.click();
+              }, 800);
+            }
+          }, 400);
+        }, 400);
       }
     });
 
