@@ -1293,6 +1293,17 @@ const galleryData = [
     description: 'Written, filmed, and edited within 24 hours for a collegiate 24-hour film festival. The film follows Adrian and Derek as they navigate their college admission results and the uncertain future of their relationship.<br><br>Directed by Jared L. Stebbins.',
     roles: 'Editor',
     gear: 'Nikon Z6'
+  },
+  {
+    id: 'video_6',
+    type: 'video',
+    category: 'videos',
+    src: '/images/Portfolio Imgs/Imgs/Li_Leo_Dejavu_poster.webp',
+    videoSrc: '/images/Portfolio Imgs/vid/Li_Leo_Dejavu.webm',
+    title: 'Dejavu',
+    description: 'Jake forgets a brilliant dream idea and pitches a movie about searching for a lost idea to his friend Lucas, only to realize they are living that exact situation. The story ends with Jake waking up, caught in a recursive loop.<br><br>Created as a final project for FMS 120A.',
+    roles: 'Director, Editor',
+    gear: ''
   }
 ];
 

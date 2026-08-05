@@ -48,6 +48,7 @@ export function initVanillaApp() {
 
 
   const audioEngine = new AudioEngine(defaultStrategies);
+  window.audioEngine = audioEngine;
 
   function updateSoundIcon() {
     if (!btnSound) return;
@@ -131,14 +132,9 @@ export function initVanillaApp() {
   // ==========================================================================
 
   function updateWrapperDimensions() {
-    document.querySelectorAll('.page-paper').forEach(paper => {
-      const wrapper = paper.querySelector('.page-content-wrapper');
-      if (wrapper) {
-        const w = paper.clientWidth;
-        const h = paper.clientHeight;
-        wrapper.style.width = `${h}px`;
-        wrapper.style.height = `${w}px`;
-      }
+    document.querySelectorAll('.page-content-wrapper').forEach(wrapper => {
+      wrapper.style.width = '';
+      wrapper.style.height = '';
     });
   }
 
@@ -164,6 +160,7 @@ export function initVanillaApp() {
         if (notebook) notebook.style.viewTransitionName = 'notebook-body';
 
         gallery.renderAll();
+        ticketSlider.render();
         audioEngine.play('flip');
 
         // Hide contents initially for the blank effect
@@ -193,13 +190,17 @@ export function initVanillaApp() {
           requestAnimationFrame(() => {
             notebookContainer.className = 'notebook-container state-zoomed-left';
 
-          const afterZoom = () => {
-            document.querySelectorAll('.page-content-wrapper').forEach(wrapper => {
-              wrapper.style.opacity = '1';
-            });
-            isTransitioningJournal = false;
+            const afterZoom = () => {
+              document.querySelectorAll('.page-content-wrapper').forEach(wrapper => {
+                wrapper.style.opacity = '1';
+              });
+              isTransitioningJournal = false;
 
-            // Trigger reflow to apply staggered entrance animations
+              if (typeof domAdapter !== 'undefined' && typeof gallery !== 'undefined') {
+                domAdapter.updatePhotosTitle(gallery.category, null, false);
+              }
+              
+              // Trigger reflow to apply staggered entrance animations
             requestAnimationFrame(() => {
               document.querySelectorAll('.scrapbook-photo, .movie-ticket').forEach((el, index) => {
                 const delay = Math.min(index, 10) * 0.08;
@@ -271,6 +272,8 @@ export function initVanillaApp() {
         if (journalTrigger) {
           journalTrigger.style.visibility = 'visible';
           journalTrigger.style.opacity = '1';
+          splashState = 'centered';
+          updateCenteredJournalPosition();
         }
 
         const splash = document.getElementById('splash-screen');
@@ -308,6 +311,7 @@ export function initVanillaApp() {
         // Reset splash state so it's clickable again
         if (typeof splashState !== 'undefined') {
           splashState = 'centered';
+          updateCenteredJournalPosition();
           document.getElementById('splash-screen').classList.add('focus-journal');
           if (typeof splashItemInfo !== 'undefined' && splashItemInfo) {
             splashItemInfo.classList.add('visible');
@@ -332,7 +336,6 @@ export function initVanillaApp() {
   const splashItemInfo = document.getElementById('splash-item-info');
   const splashGuide = document.getElementById('splash-guide');
   const splashClose = document.getElementById('splash-close');
-  const cameraTrigger = document.getElementById('camera-trigger');
   const mahjongTrigger = document.getElementById('mahjong-trigger');
   const birdieTrigger = document.getElementById('birdie-trigger');
   const tennisTrigger = document.getElementById('tennis-trigger');
@@ -346,22 +349,6 @@ export function initVanillaApp() {
 
   const physicsItems = [
     // Journal removed from physics items to stay centered
-    {
-      id: 'camera',
-      el: cameraTrigger,
-      x: window.innerWidth <= 600 ? Math.random() * (window.innerWidth - 180) : Math.random() * ((window.innerWidth - 300) / 2 - 180),
-      y: -500 - Math.random() * 300,
-      vx: (Math.random() - 0.5) * 4,
-      vy: 0,
-      width: 180,
-      height: 120,
-      gravity: 0.8,
-      bounce: -0.3,
-      friction: 0.7,
-      dragOffsetX: 0,
-      dragOffsetY: 0,
-      side: 'left'
-    },
     {
       id: 'mahjong',
       el: mahjongTrigger,
@@ -493,7 +480,7 @@ export function initVanillaApp() {
     get height() { return 380 * 1.05; }
   };
 
-  const physicsTriggers = [journalTrigger, cameraTrigger, boardgameTrigger, mahjongTrigger, birdieTrigger, tennisTrigger];
+  const physicsTriggers = [journalTrigger, boardgameTrigger, mahjongTrigger, birdieTrigger, tennisTrigger];
   physicsTriggers.forEach(trigger => {
     if (trigger) {
       trigger.addEventListener('keydown', (e) => {
@@ -501,7 +488,7 @@ export function initVanillaApp() {
           e.preventDefault();
           trigger.click();
           // Provide sound feedback if the item doesn't have its own custom click handler
-          if (trigger !== journalTrigger && trigger !== cameraTrigger && trigger !== boardgameTrigger) {
+          if (trigger !== journalTrigger && trigger !== boardgameTrigger) {
              const baseId = trigger.id.replace('-trigger', '');
              audioEngine.play('thud', { type: baseId, impact: 5 });
           }
@@ -543,13 +530,11 @@ export function initVanillaApp() {
         leoLoader.style.display = 'none';
         
         if (journalTrigger) {
-          const centerX = (window.innerWidth - 280) / 2;
-          const centerY = (window.innerHeight - 380) / 2;
           journalTrigger.style.position = 'absolute';
           journalTrigger.style.left = '0';
           journalTrigger.style.top = '0';
           journalTrigger.style.transition = 'none';
-          journalTrigger.style.transform = `translate(${centerX}px, ${centerY}px) scale(1.05)`;
+          updateCenteredJournalPosition();
           
           const splashPrompt = document.querySelector('.splash-prompt');
           if (splashPrompt) splashPrompt.style.display = 'none';
@@ -628,6 +613,40 @@ export function initVanillaApp() {
     splashPhysics.start();
   }
 
+  function updateCenteredJournalPosition(isResizeEvent = false) {
+    const splash = document.getElementById('splash-screen');
+    const isHome = !document.body.classList.contains('journal-active');
+    const isFocusedOrCentered = splashState === 'centered' || (splash && splash.classList.contains('focus-journal')) || isHome;
+    if (journalTrigger && isFocusedOrCentered) {
+      const journalWidth = 280;
+      const journalHeight = 380;
+      const centerX = (window.innerWidth - journalWidth) / 2;
+      const centerY = (window.innerHeight - journalHeight) / 2;
+      const scaleY = (window.innerHeight - 80) / journalHeight;
+      const scaleX = (window.innerWidth - 40) / journalWidth;
+      const bookScale = Math.min(1.05, Math.min(scaleX, scaleY));
+      
+      journalTrigger.style.position = 'absolute';
+      journalTrigger.style.left = '0';
+      journalTrigger.style.top = '0';
+      if (isResizeEvent) {
+        journalTrigger.style.transition = 'none';
+      }
+      journalTrigger.style.transform = `translate3d(${centerX}px, ${centerY}px, 0px) scale(${bookScale.toFixed(3)})`;
+    }
+  }
+
+  let photoResizeTimer = null;
+  window.addEventListener('resize', () => {
+    updateCenteredJournalPosition(true);
+    clearTimeout(photoResizeTimer);
+    photoResizeTimer = setTimeout(() => {
+      if (gallery && document.body.classList.contains('journal-active')) {
+        gallery.renderPhotos();
+      }
+    }, 150);
+  });
+
   function centerJournal() {
     if (splashState !== 'falling') return;
     
@@ -643,13 +662,9 @@ export function initVanillaApp() {
     }
 
     journalTrigger.style.transition = 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-    const centerX = (window.innerWidth - 280) / 2;
-    const centerY = (window.innerHeight - 380) / 2;
     
-    // Defer the transform change by one frame to ensure the transition property is registered
-    // and doesn't get batched with the removal of `transition: none` from the physics engine.
     requestAnimationFrame(() => {
-      journalTrigger.style.transform = `translate3d(${centerX}px, ${centerY}px, 0px) scale(1.05)`;
+      updateCenteredJournalPosition();
     });
 
     infoTimer = setTimeout(() => {
@@ -697,31 +712,7 @@ export function initVanillaApp() {
     });
   }
 
-  if (cameraTrigger) {
-    cameraTrigger.addEventListener('click', (e) => {
-      const currentClientX = e.clientX;
-      const currentClientY = e.clientY;
-      const dist = Math.hypot(currentClientX - splashPhysics.startClientX, currentClientY - splashPhysics.startClientY);
 
-      if (splashState === 'falling' && dist > 5) {
-        e.preventDefault();
-        return;
-      }
-      e.stopPropagation();
-
-      // Trigger Flash
-      cameraTrigger.classList.remove('flash-active');
-      void cameraTrigger.offsetWidth; // trigger reflow
-      cameraTrigger.classList.add('flash-active');
-
-      // Play Sound
-      audioEngine.play('capture');
-
-      setTimeout(() => {
-        cameraTrigger.classList.remove('flash-active');
-      }, 300);
-    });
-  }
 
   if (boardgameTrigger) {
     boardgameTrigger.addEventListener('click', (e) => {
@@ -886,7 +877,7 @@ export function initVanillaApp() {
   if (navPortfolio) {
     navPortfolio.addEventListener('click', (e) => {
       e.preventDefault();
-      handleNavClick('nature');
+      handleNavClick('portfolio');
     });
   }
 
@@ -1258,6 +1249,28 @@ export function initVanillaApp() {
     const faceBack = document.createElement('div');
     faceBack.className = 'flip-face flip-face-back';
 
+    // Clone the source page content onto flip-face-front so the turning page
+    // shows the actual content that's "leaving" — not blank paper.
+    const sourcePage = direction === 'next'
+      ? notebook.querySelector('.right-page .page-paper')
+      : notebook.querySelector('.left-page .page-paper');
+
+    if (sourcePage) {
+      const clone = sourcePage.cloneNode(true);
+      clone.style.position = 'absolute';
+      clone.style.inset = '0';
+      clone.style.pointerEvents = 'none';
+      // Strip any animate-in classes so cloned items don't re-animate
+      clone.querySelectorAll('.animate-in').forEach(el => el.classList.remove('animate-in'));
+      faceFront.appendChild(clone);
+    }
+
+    // Immediately hide the real underlying content so it doesn't bleed through
+    // behind the flipping page overlay. Uses a CSS class with !important to
+    // override the show-about-container opacity: 1 !important rule.
+    const allWrappers = notebook.querySelectorAll('.page-content-wrapper, .divider-tabs');
+    allWrappers.forEach(w => w.classList.add('flip-content-hidden'));
+
     container.appendChild(faceFront);
     container.appendChild(faceBack);
     notebook.appendChild(container);
@@ -1276,9 +1289,30 @@ export function initVanillaApp() {
       }
     }, 500);
 
-    // Clean up overlay
+    // Clean up overlay and reveal new content
     setTimeout(() => {
       container.remove();
+      // Remove hiding class, then fade in new page content
+      const wrappers = notebook.querySelectorAll('.page-content-wrapper, .divider-tabs');
+      wrappers.forEach(w => {
+        w.classList.remove('flip-content-hidden');
+        w.style.transition = 'opacity 0.3s ease';
+        w.style.opacity = '0';
+      });
+      // Force reflow then fade in
+      void notebook.offsetWidth;
+      requestAnimationFrame(() => {
+        wrappers.forEach(w => {
+          w.style.opacity = '1';
+        });
+        // Clean up inline styles after transition
+        setTimeout(() => {
+          wrappers.forEach(w => {
+            w.style.transition = '';
+            w.style.opacity = '';
+          });
+        }, 350);
+      });
     }, 1000);
 
     return true;
@@ -1476,47 +1510,106 @@ updateMacTime();
 setInterval(updateMacTime, 60000);
 
 
-// Mobile Photo Slider Logic
-  const photoTrack = document.getElementById('photos-track-wrapper');
+  // Photo Pagination & Category Switcher Logic
   const photoPrev = document.getElementById('photo-slider-prev');
   const photoNext = document.getElementById('photo-slider-next');
+  const catPrev = document.getElementById('cat-prev-btn');
+  const catNext = document.getElementById('cat-next-btn');
 
-  if (photoTrack && photoPrev && photoNext) {
-    const updatePhotoArrows = () => {
-      photoTrack.style.setProperty('--col-width', `${photoTrack.clientWidth}px`);
-      const scrollLeft = photoTrack.scrollLeft;
-      const maxScroll = photoTrack.scrollWidth - photoTrack.clientWidth;
-      photoPrev.disabled = scrollLeft <= 5;
-      photoNext.disabled = scrollLeft >= maxScroll - 5;
-    };
-
-    photoTrack.addEventListener('scroll', updatePhotoArrows);
-    const _photoResizeObs = new ResizeObserver(updatePhotoArrows);
-    _photoResizeObs.observe(photoTrack);
-
+  if (photoPrev) {
     photoPrev.addEventListener('click', () => {
-      // 220px photo + 16px gap
-      const colWidth = window.innerWidth <= 900 ? 236 : photoTrack.clientWidth + 16;
-      const currentCol = Math.round(photoTrack.scrollLeft / colWidth);
-      const targetLeft = Math.max(0, (currentCol - 1) * colWidth);
-      photoTrack.scrollTo({ left: targetLeft, behavior: 'smooth' });
+      gallery.prevPage();
+      audioEngine.play('flip');
     });
-
-    photoNext.addEventListener('click', () => {
-      // 220px photo + 16px gap
-      const colWidth = window.innerWidth <= 900 ? 236 : photoTrack.clientWidth + 16;
-      const currentCol = Math.round(photoTrack.scrollLeft / colWidth);
-      const targetLeft = (currentCol + 1) * colWidth;
-      photoTrack.scrollTo({ left: targetLeft, behavior: 'smooth' });
-    });
-
-    const observer = new MutationObserver(() => {
-      setTimeout(updatePhotoArrows, 100);
-    });
-
-    const photosGrid = document.getElementById('photos-grid');
-    if (photosGrid) {
-      observer.observe(photosGrid, { childList: true });
-    }
   }
+
+  if (photoNext) {
+    photoNext.addEventListener('click', () => {
+      gallery.nextPage();
+      audioEngine.play('flip');
+    });
+  }
+
+  if (catPrev) {
+    catPrev.addEventListener('click', () => {
+      const items = document.querySelectorAll('.cat-title-item');
+      if (items.length === 0) return;
+      let newIdx = domAdapter.catIndex - 1;
+      const targetItem = items[newIdx] || items[0];
+      const cat = targetItem.getAttribute('data-cat');
+      gallery.category = cat;
+      gallery.renderPhotos(cat, 0);
+      domAdapter.updatePhotosTitle(cat, newIdx);
+      audioEngine.play('flip');
+    });
+  }
+
+  if (catNext) {
+    catNext.addEventListener('click', () => {
+      const items = document.querySelectorAll('.cat-title-item');
+      if (items.length === 0) return;
+      let newIdx = domAdapter.catIndex + 1;
+      const targetItem = items[newIdx] || items[0];
+      const cat = targetItem.getAttribute('data-cat');
+      gallery.category = cat;
+      gallery.renderPhotos(cat, 0);
+      domAdapter.updatePhotosTitle(cat, newIdx);
+      audioEngine.play('flip');
+    });
+  }
+
+  const titleItems = document.querySelectorAll('.cat-title-item');
+  titleItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      const cat = e.currentTarget.getAttribute('data-cat');
+      const idxStr = e.currentTarget.getAttribute('data-index');
+      const idx = idxStr !== null ? parseInt(idxStr, 10) : null;
+      if (cat) {
+        gallery.category = cat;
+        gallery.renderPhotos(cat, 0);
+        domAdapter.updatePhotosTitle(cat, idx);
+        audioEngine.play('flip');
+      }
+    });
+  });
+
+  const catSlider = document.querySelector('.category-title-slider');
+  if (catSlider) {
+    let startX = 0;
+    catSlider.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+    catSlider.addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+      if (Math.abs(diff) > 30) {
+        const items = document.querySelectorAll('.cat-title-item');
+        if (items.length > 0) {
+          let newIdx = diff < 0 ? domAdapter.catIndex + 1 : domAdapter.catIndex - 1;
+          const targetItem = items[newIdx] || items[0];
+          const cat = targetItem.getAttribute('data-cat');
+          gallery.category = cat;
+          gallery.renderPhotos(cat, 0);
+          domAdapter.updatePhotosTitle(cat, newIdx);
+          audioEngine.play('flip');
+        }
+      }
+    }, { passive: true });
+  }
+
+  // Initial title centering on load (instant, no transition)
+  setTimeout(() => {
+    domAdapter.updatePhotosTitle(gallery.category, null, false);
+  }, 50);
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      domAdapter.updatePhotosTitle(gallery.category, null, false);
+    });
+  }
+
+  // Recalculate centering on window resize
+  window.addEventListener('resize', () => {
+    domAdapter.updatePhotosTitle(gallery.category, null, false);
+  });
 }

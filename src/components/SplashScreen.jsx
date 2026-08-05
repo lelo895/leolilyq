@@ -32,30 +32,6 @@ export default function SplashScreen() {
         <div className="drag-tooltip">Leo's Photobook</div>
       </div>
 
-      {/* Draggable Camera */}
-      <div className="item-wrapper camera-wrapper" id="camera-trigger" role="button" tabIndex={0} aria-label="Leo's Photobook">
-        <div className="camera-body">
-          {/* Flash unit that pops up */}
-          <div className="camera-flash-unit">
-            <div className="camera-flash-light"></div>
-          </div>
-          {/* Camera details */}
-          <div className="camera-top-dial"></div>
-          <div className="camera-lens-mount">
-            <div className="camera-lens">
-              <div className="camera-lens-inner">
-                <div className="camera-lens-glass"></div>
-              </div>
-            </div>
-          </div>
-          <div className="camera-button"></div>
-          <div className="camera-grip"></div>
-          <div className="camera-brand">Canon</div>
-          <div className="camera-model">EOS<br /><span>Rebel T7</span></div>
-        </div>
-        {/* Tooltip */}
-        <div className="drag-tooltip">Canon EOS Rebel T7 DSLR Camera</div>
-      </div>
 
       {/* Draggable Mahjong */}
       <div className="item-wrapper mahjong-wrapper" id="mahjong-trigger" role="button" tabIndex={0} aria-label="Play with mahjong tile">

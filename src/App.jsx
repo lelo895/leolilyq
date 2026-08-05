@@ -4,6 +4,7 @@ import Navigation from './components/Navigation.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
 import Notebook from './components/Notebook.jsx';
 import DetailsModal from './components/DetailsModal.jsx';
+import KineticDots from './components/KineticDots.jsx';
 import { initVanillaApp } from '../js/main.js';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
 
   return (
     <>
+      <KineticDots radius={100} strength={1.5} style={{ zIndex: -1000 }} />
       <Loader />
       <Navigation />
       <main>
@@ -21,6 +23,10 @@ export default function App() {
         <Notebook />
         <DetailsModal />
       </main>
+      <div className="copyright-footer">
+        &copy; 2026 Leo Li, All rights reserved
+      </div>
     </>
   );
 }
+

@@ -2,10 +2,10 @@ import React from 'react';
 
 export default function DetailsModal() {
   return (
-    <div className="modal" id="details-modal" aria-hidden="true" inert="true" role="dialog">
+    <div className="modal" id="details-modal" aria-hidden="true" inert="" role="dialog">
       <div className="modal-backdrop"></div>
       <div className="modal-wrapper">
-        <button className="modal-close" id="close-details" aria-label="Close details modal">&times;</button>
+        <button type="button" className="modal-close" id="close-details" aria-label="Close details modal">&times;</button>
         <div className="details-content-grid">
           <div className="details-media-panel">
             {/* Populated dynamically (img or iframe) */}

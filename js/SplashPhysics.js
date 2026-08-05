@@ -12,7 +12,19 @@ export default class SplashPhysics {
     this.handleStart = this.handleStart.bind(this);
     this.drag = this.drag.bind(this);
     this.endDrag = this.endDrag.bind(this);
+    this.handleResize = this.handleResize.bind(this);
     this.physicsLoop = this.physicsLoop.bind(this);
+  }
+
+  handleResize() {
+    this.items.forEach(item => {
+      if (item.el) {
+        const maxX = Math.max(0, window.innerWidth - item.width);
+        const maxY = Math.max(0, window.innerHeight - item.height);
+        if (item.x > maxX) item.x = maxX;
+        if (item.y > maxY) item.y = maxY;
+      }
+    });
   }
 
   getSpawnX(itemWidth, side) {
@@ -32,6 +44,7 @@ export default class SplashPhysics {
   start() {
     if (this.active) return;
     this.active = true;
+    window.addEventListener('resize', this.handleResize);
     this.items.forEach(item => {
       if (!item.el) return;
       item.el.style.position = 'absolute';
@@ -52,6 +65,7 @@ export default class SplashPhysics {
 
   stop() {
     this.active = false;
+    window.removeEventListener('resize', this.handleResize);
     if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
     this.items.forEach(item => {
       if (!item.el) return;

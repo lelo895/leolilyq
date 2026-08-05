@@ -3,6 +3,7 @@ import React from 'react';
 export default function Navigation() {
   return (
     <>
+      <div className="top-header-blur"></div>
       <div className="top-left-brand">
         <div className="brand-container">
           <a href="#" className="brand-logo" id="brand-logo">Yongqian (Leo) Li 李泳谦</a>
@@ -14,11 +15,11 @@ export default function Navigation() {
         </div>
       </div>
       <div className="top-right-controls">
-        <button className="sound-toggle-btn" id="btn-sound" aria-label="Toggle Sound Effects" title="Toggle Sound Effects">
-          <i className="fa-solid fa-volume-high"></i>
+        <button type="button" className="sound-toggle-btn" id="btn-sound" aria-label="Toggle Sound Effects" title="Toggle Sound Effects">
+          <i className="fa-solid fa-volume-high" aria-hidden="true"></i>
         </button>
-        <button className="theme-toggle-btn" id="btn-theme" aria-label="Toggle Dark/Light Mode">
-          <i className="fa-regular fa-moon"></i>
+        <button type="button" className="theme-toggle-btn" id="btn-theme" aria-label="Toggle Dark/Light Mode">
+          <i className="fa-regular fa-moon" aria-hidden="true"></i>
         </button>
       </div>
     </>

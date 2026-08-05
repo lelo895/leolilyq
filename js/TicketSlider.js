@@ -178,12 +178,29 @@ export default class TicketSlider {
     });
 
     const originalLength = videosData.length;
-    let currentTicketIndex = originalLength + Math.floor(originalLength / 2);
+    let currentTicketIndex = originalLength;
     const prevBtn = document.getElementById('ticket-slider-prev');
     const nextBtn = document.getElementById('ticket-slider-next');
     let isSliderTransitioning = false;
 
-    function updateTicketSlider(animate = true) {
+    const dotsContainer = document.getElementById('ticket-pagination-dots');
+    if (dotsContainer) {
+      dotsContainer.innerHTML = '';
+      videosData.forEach((_, idx) => {
+        const dot = document.createElement('span');
+        dot.className = 'ticket-dot';
+        dot.addEventListener('click', () => {
+          if (isSliderTransitioning) return;
+          isSliderTransitioning = true;
+          currentTicketIndex = originalLength + idx;
+          updateTicketSlider(true);
+          setTimeout(() => { isSliderTransitioning = false; }, 400);
+        });
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    const updateTicketSlider = (animate = true) => {
       const tickets = ticketsGrid.querySelectorAll('.movie-ticket');
       if (tickets.length === 0) return;
 
@@ -195,8 +212,21 @@ export default class TicketSlider {
         }
       });
 
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.ticket-dot');
+        const activeIdx = (currentTicketIndex % originalLength);
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle('active', idx === activeIdx);
+        });
+      }
+
       const trackWrapper = document.querySelector('.tickets-track-wrapper');
       if (trackWrapper) {
+        const trackWidth = trackWrapper.offsetWidth;
+        if (trackWidth === 0) {
+          return;
+        }
+
         const ticketEl = ticketsGrid.querySelector('.movie-ticket');
         const ticketWidth = ticketEl ? ticketEl.offsetWidth : 340;
         let gap = 30;
@@ -205,7 +235,6 @@ export default class TicketSlider {
           const gridGap = gridStyle.getPropertyValue('gap');
           if (gridGap) gap = parseInt(gridGap, 10) || 30;
         }
-        const trackWidth = trackWrapper.offsetWidth;
 
         const centerOffset = (trackWidth - ticketWidth) / 2;
         const translateX = -(currentTicketIndex * (ticketWidth + gap)) + centerOffset;
@@ -220,6 +249,23 @@ export default class TicketSlider {
           ticketsGrid.style.transform = `translateX(${translateX}px)`;
         }
       }
+    };
+
+    this._updateTicketSlider = updateTicketSlider;
+
+    const handleResize = () => {
+      updateTicketSlider(false);
+    };
+    window.addEventListener('resize', handleResize);
+
+    const trackWrapper = document.querySelector('.tickets-track-wrapper');
+    if (window.ResizeObserver && trackWrapper) {
+      const ro = new ResizeObserver(() => {
+        if (trackWrapper.offsetWidth > 0) {
+          updateTicketSlider(false);
+        }
+      });
+      ro.observe(trackWrapper);
     }
 
     if (prevBtn) {
@@ -324,5 +370,11 @@ export default class TicketSlider {
       }
       setTimeout(() => { isSwiping = false; }, 50);
     });
+  }
+
+  update(animate = false) {
+    if (typeof this._updateTicketSlider === 'function') {
+      this._updateTicketSlider(animate);
+    }
   }
 }
