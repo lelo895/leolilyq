@@ -5,13 +5,7 @@ import './src/styles/utilities.css';
 import App from './src/App.jsx';
 import { registerSW } from 'virtual:pwa-register';
 
-const updateSW = registerSW({
-  onNeedRefresh() {
-    if (confirm("New version available. Reload?")) {
-      updateSW(true);
-    }
-  }
-});
+registerSW({ immediate: true });
 
 const container = document.getElementById('react-root');
 if (container) {
