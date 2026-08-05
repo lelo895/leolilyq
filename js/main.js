@@ -7,13 +7,18 @@ import TicketSlider from './TicketSlider.js';
 import NotebookDOMAdapter from './NotebookDOMAdapter.js';
 import { galleryData } from '../src/data/gallery-data.js';
 
-gsap.registerPlugin(CustomEase, CustomBounce);
+if (typeof gsap !== 'undefined' && typeof CustomEase !== 'undefined' && typeof CustomBounce !== 'undefined') {
+  gsap.registerPlugin(CustomEase, CustomBounce);
+}
 
 /* ==========================================================================
    PORTFOLIO ENGINE & INTERACTIONS
    ========================================================================== */
 
 export function initVanillaApp() {
+  if (typeof gsap !== 'undefined' && typeof CustomEase !== 'undefined' && typeof CustomBounce !== 'undefined') {
+    gsap.registerPlugin(CustomEase, CustomBounce);
+  }
 
 
   // DOM Elements
