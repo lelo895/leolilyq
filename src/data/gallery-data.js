@@ -1,4 +1,15 @@
-export const galleryData = [
+import { MEDIA_BASE } from '../config.js';
+
+const toMediaUrl = (path) => {
+  if (!path) return path;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (path.startsWith('/images/')) {
+    return `${MEDIA_BASE}${path.substring('/images'.length)}`;
+  }
+  return `${MEDIA_BASE}/${path.replace(/^\//, '')}`;
+};
+
+const rawGalleryData = [
   {
     id: 'img_0',
     type: 'image',
@@ -1306,6 +1317,13 @@ export const galleryData = [
     gear: ''
   }
 ];
+
+export const galleryData = rawGalleryData.map((item) => ({
+  ...item,
+  src: toMediaUrl(item.src),
+  videoSrc: item.videoSrc ? toMediaUrl(item.videoSrc) : undefined,
+  r2Key: item.r2Key || (item.videoSrc ? item.videoSrc.replace(/^\/images\//, '').replace(/^\//, '') : undefined)
+}));
 
 export const resumeData = {
   name: 'YONGQIAN (LEO) LI',

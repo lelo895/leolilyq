@@ -18,29 +18,22 @@ config.json
 # Node
 node_modules/
 
-# (Images and Videos are tracked for Vercel deployment)
-# Note: Files > 100MB must still be excluded or compressed for GitHub
-public/images/Portfolio\ Imgs/vid/0727.webm
-public/images/Portfolio\ Imgs/vid/lock_down.webm
-
-# Exclude virtual environments and large binaries
+# Offloaded to Cloudflare R2
+public/images/
+dist/images/
+images_backup_20260620/
+public/images/portfolio_backup/
+tmp.js
 scratch/
-tools/ffmpeg
-tools/ffmpeg.zip
+tools/
 __pycache__/
 *.pyc
-images_backup_20260620/
-tools/contact_sheet_*.jpg
-dist/images/Portfolio Imgs/vid/0727.webm
-dist/images/Portfolio Imgs/vid/lock_down.webm
+*.mov
 .agnes/
 .agents/
 .codex/
 .gemini/
 graphify-out/
 .graphifyignore
-*.mov
-public/images/portfolio_backup/
-tmp.js
 
 

@@ -21,13 +21,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing media key' });
   }
 
-  // Sanitize key (strip any directory traversal)
-  const sanitizedKey = String(key).replace(/\.\./g, '').replace(/^\//, '');
+  // Sanitize key (strip any directory traversal and leading slashes)
+  let sanitizedKey = String(key).replace(/\.\./g, '').replace(/^\/+/, '');
+  // Normalize key to ensure it matches the R2 bucket structure (under images/)
+  const targetKey = sanitizedKey.startsWith('images/') ? sanitizedKey : `images/${sanitizedKey}`;
 
   try {
     const command = new GetObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME || 'lelo-films',
-      Key: sanitizedKey,
+      Key: targetKey,
     });
 
     // 120 seconds expiry: sufficient time for the browser <video> player to initiate buffered streaming

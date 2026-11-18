@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MEDIA_BASE } from '../config.js';
 
 export default function Notebook() {
   const [isMobile, setIsMobile] = useState(false);
@@ -70,7 +71,7 @@ export default function Notebook() {
       <aside className="about-sidebar">
         {/* Profile Card */}
         <div className="profile-card">
-          <img src="/images/profile.webp" alt="Yongqian (Leo) Li Profile Photo" className="profile-img" width="300" height="300" loading="lazy" />
+          <img src={`${MEDIA_BASE}/profile.webp`} alt="Yongqian (Leo) Li Profile Photo" className="profile-img" width="300" height="300" loading="lazy" />
           <h1 className="profile-name">YONGQIAN (LEO) LI <span lang="zh">李泳谦</span></h1>
           <p className="profile-tagline">Film & Media Major @ UC Irvine</p>
         </div>
@@ -141,11 +142,11 @@ export default function Notebook() {
           <section className="resume-section">
             <h2 className="section-title" style={{ marginTop: 'var(--space-md)' }}>Skills</h2>
             <div className="mobile-skills-grid">
-              <div className="paper-cutout-skill"><div className="pin pin-red"></div><img src="/images/tools/premierepro.svg" alt="Premiere Pro" /><span>Premiere Pro</span></div>
-              <div className="paper-cutout-skill"><div className="pin pin-blue"></div><img src="/images/tools/davinciresolve.svg" alt="DaVinci Resolve" /><span>DaVinci</span></div>
-              <div className="paper-cutout-skill"><div className="pin pin-yellow"></div><img src="/images/tools/photoshop.svg" alt="Photoshop" /><span>Photoshop</span></div>
-              <div className="paper-cutout-skill"><div className="pin pin-green"></div><img src="/images/tools/lightroom.svg" alt="Lightroom" /><span>Lightroom</span></div>
-              <div className="paper-cutout-skill"><div className="pin pin-red"></div><img src="/images/tools/capcut.svg" alt="CapCut" /><span>CapCut</span></div>
+              <div className="paper-cutout-skill"><div className="pin pin-red"></div><img src={`${MEDIA_BASE}/tools/premierepro.svg`} alt="Premiere Pro" /><span>Premiere Pro</span></div>
+              <div className="paper-cutout-skill"><div className="pin pin-blue"></div><img src={`${MEDIA_BASE}/tools/davinciresolve.svg`} alt="DaVinci Resolve" /><span>DaVinci</span></div>
+              <div className="paper-cutout-skill"><div className="pin pin-yellow"></div><img src={`${MEDIA_BASE}/tools/photoshop.svg`} alt="Photoshop" /><span>Photoshop</span></div>
+              <div className="paper-cutout-skill"><div className="pin pin-green"></div><img src={`${MEDIA_BASE}/tools/lightroom.svg`} alt="Lightroom" /><span>Lightroom</span></div>
+              <div className="paper-cutout-skill"><div className="pin pin-red"></div><img src={`${MEDIA_BASE}/tools/capcut.svg`} alt="CapCut" /><span>CapCut</span></div>
             </div>
           </section>
         </div>
@@ -189,7 +190,7 @@ export default function Notebook() {
     <div className="page-content-wrapper about-view">
       <aside className="about-sidebar">
         <div className="profile-card">
-          <img src="/images/profile.webp" alt="Yongqian (Leo) Li Profile Photo" className="profile-img" width="300" height="300" loading="lazy" />
+          <img src={`${MEDIA_BASE}/profile.webp`} alt="Yongqian (Leo) Li Profile Photo" className="profile-img" width="300" height="300" loading="lazy" />
           <h1 className="profile-name">YONGQIAN (LEO) LI <span lang="zh">李泳谦</span></h1>
           <p className="profile-tagline">Film & Media Major @ UC Irvine</p>
         </div>
@@ -240,11 +241,11 @@ export default function Notebook() {
                           </div>
                         </div>
                         <div className="mac-dock">
-                          <div className="dock-item"><img src="/images/tools/premierepro.svg" alt="Premiere Pro" /><span className="dock-tooltip">Premiere Pro</span></div>
-                          <div className="dock-item"><img src="/images/tools/davinciresolve.svg" alt="DaVinci Resolve" /><span className="dock-tooltip">DaVinci Resolve</span></div>
-                          <div className="dock-item"><img src="/images/tools/photoshop.svg" alt="Photoshop" /><span className="dock-tooltip">Photoshop</span></div>
-                          <div className="dock-item"><img src="/images/tools/lightroom.svg" alt="Lightroom" /><span className="dock-tooltip">Lightroom</span></div>
-                          <div className="dock-item"><img src="/images/tools/capcut.svg" alt="CapCut" /><span className="dock-tooltip">CapCut</span></div>
+                          <div className="dock-item"><img src={`${MEDIA_BASE}/tools/premierepro.svg`} alt="Premiere Pro" /><span className="dock-tooltip">Premiere Pro</span></div>
+                          <div className="dock-item"><img src={`${MEDIA_BASE}/tools/davinciresolve.svg`} alt="DaVinci Resolve" /><span className="dock-tooltip">DaVinci Resolve</span></div>
+                          <div className="dock-item"><img src={`${MEDIA_BASE}/tools/photoshop.svg`} alt="Photoshop" /><span className="dock-tooltip">Photoshop</span></div>
+                          <div className="dock-item"><img src={`${MEDIA_BASE}/tools/lightroom.svg`} alt="Lightroom" /><span className="dock-tooltip">Lightroom</span></div>
+                          <div className="dock-item"><img src={`${MEDIA_BASE}/tools/capcut.svg`} alt="CapCut" /><span className="dock-tooltip">CapCut</span></div>
                         </div>
                       </div>
                     </div>

@@ -4,7 +4,7 @@
  * Run with: npm run upload-films
  */
 
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -32,6 +32,7 @@ const mimeTypes = {
   '.webp': 'image/webp',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
+  '.svg': 'image/svg+xml',
 };
 
 function getAllFiles(dir, fileList = []) {
@@ -43,7 +44,7 @@ function getAllFiles(dir, fileList = []) {
       getAllFiles(fullPath, fileList);
     } else {
       const ext = path.extname(entry.name).toLowerCase();
-      if (['.webp', '.webm', '.mp4', '.mov', '.png', '.jpg'].includes(ext)) {
+      if (['.webp', '.webm', '.mp4', '.mov', '.png', '.jpg', '.svg'].includes(ext)) {
         fileList.push(fullPath);
       }
     }
@@ -52,13 +53,23 @@ function getAllFiles(dir, fileList = []) {
 }
 
 async function uploadFile(absoluteFilePath) {
-  // Key relative to public/ e.g. "images/Portfolio Imgs/Imgs/xyz.webp" and also flat basename
   const relativePath = path.relative(PUBLIC_DIR, absoluteFilePath);
   const ext = path.extname(absoluteFilePath).toLowerCase();
   const contentType = mimeTypes[ext] || 'application/octet-stream';
-  const fileStream = fs.createReadStream(absoluteFilePath);
   const stats = fs.statSync(absoluteFilePath);
 
+  // Check if object already exists with matching size
+  try {
+    const head = await s3.send(new HeadObjectCommand({ Bucket: BUCKET, Key: relativePath }));
+    if (head.ContentLength === stats.size) {
+      console.log(`- Skipped [${relativePath}] (already up to date)`);
+      return;
+    }
+  } catch (err) {
+    // 404/NoSuchKey means we need to upload
+  }
+
+  const fileStream = fs.createReadStream(absoluteFilePath);
   const command = new PutObjectCommand({
     Bucket: BUCKET,
     Key: relativePath,
