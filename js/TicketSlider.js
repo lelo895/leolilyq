@@ -23,6 +23,9 @@ export default class TicketSlider {
     infiniteData.forEach((item, index) => {
       const ticket = document.createElement('div');
       ticket.className = 'movie-ticket';
+      ticket.setAttribute('role', 'button');
+      ticket.setAttribute('tabindex', '0');
+      ticket.setAttribute('aria-label', `View video clip: ${item.title}`);
 
       const posterWrapper = document.createElement('div');
       posterWrapper.className = 'ticket-poster-wrapper';
@@ -30,6 +33,8 @@ export default class TicketSlider {
       const img = document.createElement('img');
       img.src = item.src;
       img.alt = item.title;
+      img.width = 280;
+      img.height = 170;
       img.loading = index > 1 ? 'lazy' : 'eager';
 
       const playOverlay = document.createElement('div');
@@ -105,7 +110,7 @@ export default class TicketSlider {
       ticket.appendChild(perforations);
       ticket.appendChild(infoStub);
 
-      ticket.addEventListener('click', (e) => {
+      const handleTicketClick = (e) => {
         if (isSwiping) {
           e.preventDefault();
           e.stopPropagation();
@@ -118,6 +123,7 @@ export default class TicketSlider {
           const rect = ticket.getBoundingClientRect();
           const clone = ticket.cloneNode(true);
 
+          clone.classList.remove('focused-ticket', 'animate-in');
           clone.style.position = 'fixed';
           clone.style.margin = '0';
           clone.style.left = `${rect.left}px`;
@@ -125,8 +131,10 @@ export default class TicketSlider {
           clone.style.width = `${rect.width}px`;
           clone.style.height = `${rect.height}px`;
           clone.style.zIndex = '9999';
-          clone.style.transform = 'none';
-          clone.classList.remove('focused-ticket');
+          clone.style.pointerEvents = 'none';
+          clone.style.setProperty('animation', 'none', 'important');
+          clone.style.setProperty('opacity', '1', 'important');
+          clone.style.setProperty('transform', 'translate3d(0, 0, 0) scale(1)', 'important');
 
           document.body.appendChild(clone);
           ticket.style.opacity = '0';
@@ -135,26 +143,30 @@ export default class TicketSlider {
           overlay.className = 'ticket-focus-overlay';
           document.body.appendChild(overlay);
 
+          const targetX = (window.innerWidth - rect.width) / 2;
+          const targetY = (window.innerHeight - rect.height) / 2;
+          const dx = targetX - rect.left;
+          const dy = targetY - rect.top;
+          const scale = Math.min(1.15, (window.innerHeight * 0.85) / rect.height);
+
           void clone.offsetWidth;
 
-          overlay.classList.add('visible');
-
-          clone.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-          clone.style.left = '50%';
-          clone.style.top = '50%';
-          clone.style.transform = 'translate(-50%, -50%) scale(1.2)';
+          requestAnimationFrame(() => {
+            overlay.classList.add('visible');
+            clone.style.setProperty('transition', 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+            clone.style.setProperty('transform', `translate3d(${dx}px, ${dy}px, 0) scale(${scale})`, 'important');
+          });
 
           setTimeout(() => {
             ticket.dataset.animating = "false";
             ticket.style.opacity = '';
             overlay.classList.remove('visible');
-            setTimeout(() => overlay.remove(), 600);
+            setTimeout(() => overlay.remove(), 400);
 
             this._setActiveClickedImg(clone);
             this._onOpenDetails(item);
-          }, 850);
+          }, 360);
         } else {
-          console.log("Navigating to ticket index: ", index);
           if (typeof isSliderTransitioning !== 'undefined' && isSliderTransitioning) return;
           isSliderTransitioning = true;
 
@@ -171,6 +183,14 @@ export default class TicketSlider {
             }
             isSliderTransitioning = false;
           }, 400);
+        }
+      };
+
+      ticket.addEventListener('click', handleTicketClick);
+      ticket.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleTicketClick(e);
         }
       });
 

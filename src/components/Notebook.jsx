@@ -177,7 +177,7 @@ export default function Notebook() {
           <button type="button" className="sticky-note-trigger" onClick={() => setIsStickyOpen(true)}>
             <div className="sticky-tape"></div>
             <div className="sticky-note-header">📌 Contact Me</div>
-            <p className="sticky-note-preview">Click note to leave a message...</p>
+            <p className="sticky-note-preview">Click note to leave a message…</p>
             <span className="sticky-note-corner"></span>
           </button>
         </div>
@@ -378,7 +378,7 @@ export default function Notebook() {
           <button type="button" className="sticky-note-trigger" onClick={() => setIsStickyOpen(true)}>
             <div className="sticky-tape"></div>
             <div className="sticky-note-header">📌 Contact Me</div>
-            <p className="sticky-note-preview">Click note to leave a message...</p>
+            <p className="sticky-note-preview">Click note to leave a message…</p>
             <span className="sticky-note-corner"></span>
           </button>
         </div>
@@ -517,6 +517,7 @@ export default function Notebook() {
                     type="email"
                     required
                     autoComplete="email"
+                    spellCheck={false}
                     value={contactForm.email}
                     onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                     placeholder="your@email.com"
@@ -530,11 +531,11 @@ export default function Notebook() {
                     rows="3"
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                    placeholder="Write message here..."
+                    placeholder="Write message here…"
                   ></textarea>
                 </div>
                 <button type="submit" className="sticky-send-btn" disabled={isSubmitting}>
-                  {isSubmitting ? 'Sending... ⏳' : 'Send! 🚀'}
+                  {isSubmitting ? 'Sending…' : 'Send Message'}
                 </button>
               </form>
             )}

@@ -149,97 +149,60 @@ export function initVanillaApp() {
     isTransitioningJournal = true;
     sessionStorage.setItem('journalOpened', 'true');
 
+    // 1. Play tactile flip sound immediately upon interaction
+    if (audioEngine) {
+      audioEngine.play('flip');
+    }
+
+    // 2. Trigger cover flip animation on splash screen
     const splash = document.getElementById('splash-screen');
     if (splash) {
       splash.classList.add('opening');
     }
 
     const notebookContainer = document.getElementById('notebook-container');
-    const journal = document.querySelector('.journal');
-    const notebook = document.querySelector('.notebook');
 
+    // 3. Pre-render gallery and slider so contents are immediately populated
+    gallery.renderAll();
+    ticketSlider.render();
+
+    // 4. Fluid handoff as the cover finishes rotating open (~380ms)
     setTimeout(() => {
-      if (journal) journal.style.viewTransitionName = 'notebook-body';
+      document.body.classList.add('journal-active');
+      if (notebookContainer) {
+        notebookContainer.className = 'notebook-container state-zoomed-left';
+      }
+      if (canvasContainer) {
+        canvasContainer.scrollTop = 0;
+      }
+      updateWrapperDimensions();
 
-      const transition = runViewTransition(() => {
-        if (journal) journal.style.viewTransitionName = '';
-        if (notebook) notebook.style.viewTransitionName = 'notebook-body';
-
-        gallery.renderAll();
-        ticketSlider.render();
-        audioEngine.play('flip');
-
-        // Hide contents initially for the blank effect
-        document.querySelectorAll('.page-content-wrapper').forEach(wrapper => {
-          wrapper.style.opacity = '0';
-          wrapper.style.transition = 'opacity 0.6s ease';
-        });
-
-        document.body.classList.add('journal-active');
-        notebookContainer.className = 'notebook-container state-open-blank';
-        if (canvasContainer) {
-          canvasContainer.scrollTop = 0;
-        }
-
-        updateWrapperDimensions();
+      // Smoothly fade in page spread without jarring blank pause
+      document.querySelectorAll('.page-content-wrapper').forEach(wrapper => {
+        wrapper.style.opacity = '1';
+        wrapper.style.transition = 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
       });
 
-      const cleanUp = () => {
-        if (journal) journal.style.viewTransitionName = '';
-        if (notebook) notebook.style.viewTransitionName = '';
-      };
-
-      const startZoom = () => {
-        // Use double requestAnimationFrame to ensure the browser paints state-open-blank
-        // after View Transition teardown before starting the CSS rotation transition.
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            notebookContainer.className = 'notebook-container state-zoomed-left';
-
-            const afterZoom = () => {
-              document.querySelectorAll('.page-content-wrapper').forEach(wrapper => {
-                wrapper.style.opacity = '1';
-              });
-              isTransitioningJournal = false;
-
-              if (typeof domAdapter !== 'undefined' && typeof gallery !== 'undefined') {
-                domAdapter.updatePhotosTitle(gallery.category, null, false);
-              }
-              
-              // Trigger reflow to apply staggered entrance animations
-            requestAnimationFrame(() => {
-              document.querySelectorAll('.scrapbook-photo, .movie-ticket').forEach((el, index) => {
-                const delay = Math.min(index, 10) * 0.08;
-                el.style.animationDelay = `${delay}s`;
-                el.classList.add('animate-in');
-                // Fallback: if CSS animation fails (e.g. hardware accel off),
-                // force visibility after the animation would have completed.
-                const totalMs = (delay + 0.65) * 1000;
-                setTimeout(() => {
-                  el.style.opacity = '1';
-                  el.style.transform = 'translateY(0) scale(1)';
-                }, totalMs);
-              });
-            });
-          };
-          setTimeout(afterZoom, 800); // 800ms matches the CSS transition duration
-          });
-        });
-      };
-
-      if (transition.finished) {
-        transition.finished.then(() => {
-          cleanUp();
-          startZoom();
-        }).catch(() => {
-          cleanUp();
-          startZoom();
-        });
-      } else {
-        cleanUp();
-        startZoom();
+      if (typeof domAdapter !== 'undefined' && typeof gallery !== 'undefined') {
+        domAdapter.updatePhotosTitle(gallery.category, null, false);
       }
-    }, 750);
+
+      // Elegant staggered photo entrance
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.scrapbook-photo, .movie-ticket').forEach((el, index) => {
+          const delay = Math.min(index, 8) * 0.04;
+          el.style.animationDelay = `${delay}s`;
+          el.classList.add('animate-in');
+        });
+      });
+
+      setTimeout(() => {
+        isTransitioningJournal = false;
+        if (splash) {
+          splash.classList.remove('opening');
+        }
+      }, 550);
+    }, 380);
   }
 
   function closeJournal() {
@@ -250,90 +213,64 @@ export function initVanillaApp() {
       customCursor.classList.remove('hovered');
     }
 
+    if (audioEngine) {
+      audioEngine.play('flip');
+    }
+
     const notebookContainer = document.getElementById('notebook-container');
-    const journal = document.querySelector('.journal');
     const notebook = document.querySelector('.notebook');
+    const splash = document.getElementById('splash-screen');
 
     gallery.reset();
     if (notebook) notebook.classList.remove('show-about');
-    const _nc = document.getElementById('notebook-container');
-    if (_nc) _nc.classList.remove('show-about-container');
+    if (notebookContainer) notebookContainer.classList.remove('show-about-container');
     if (canvasContainer) canvasContainer.classList.remove('about-open');
 
-    // Step 1: Use native CSS transition to un-zoom and un-rotate back to portrait
-    notebookContainer.className = 'notebook-container state-open-blank';
-    
+    // Fade out page content as notebook closes
     document.querySelectorAll('.page-content-wrapper').forEach(wrapper => {
       wrapper.style.opacity = '0';
+      wrapper.style.transition = 'opacity 0.25s ease';
     });
 
-    // Step 2: Wait for CSS transition (800ms) to finish, then View Transition to closed cover
     setTimeout(() => {
-      if (notebook) notebook.style.viewTransitionName = 'notebook-body';
-      
-      const transition = runViewTransition(() => {
-        if (notebook) notebook.style.viewTransitionName = '';
-        if (journal) journal.style.viewTransitionName = 'notebook-body';
+      document.body.classList.remove('journal-active');
 
-        if (journalTrigger) {
-          journalTrigger.style.visibility = 'visible';
-          journalTrigger.style.opacity = '1';
-          splashState = 'centered';
-          updateCenteredJournalPosition();
-        }
-
-        const splash = document.getElementById('splash-screen');
+      if (journalTrigger) {
+        journalTrigger.style.visibility = 'visible';
+        journalTrigger.style.opacity = '1';
+        splashState = 'centered';
+        updateCenteredJournalPosition();
         if (splash) {
-          splash.classList.remove('opening');
+          splash.classList.add('focus-journal');
         }
-        document.body.classList.remove('journal-active');
-        audioEngine.play('flip');
-      });
-
-      const cleanUp = () => {
-        if (journal) journal.style.viewTransitionName = '';
-        if (notebook) notebook.style.viewTransitionName = '';
-      };
-
-      if (transition.finished) {
-        transition.finished.then(cleanUp).catch(cleanUp);
-      } else {
-        cleanUp();
+        if (typeof splashItemInfo !== 'undefined' && splashItemInfo) {
+          splashItemInfo.classList.add('visible');
+        }
+        if (typeof splashClose !== 'undefined' && splashClose) {
+          splashClose.classList.add('visible');
+        }
       }
 
-      const afterExit = () => {
+      if (splash) {
+        splash.classList.remove('opening');
+      }
+
+      const photosGrid = document.getElementById('photos-grid');
+      const ticketsGrid = document.getElementById('tickets-grid');
+      if (photosGrid) photosGrid.innerHTML = '';
+      if (ticketsGrid) ticketsGrid.innerHTML = '';
+      if (notebookContainer) {
+        notebookContainer.className = 'notebook-container';
+      }
+
+      setTimeout(() => {
+        isTransitioningJournal = false;
         if (journalTrigger) {
           journalTrigger.style.visibility = '';
           journalTrigger.style.opacity = '';
         }
-
-        const photosGrid = document.getElementById('photos-grid');
-        const ticketsGrid = document.getElementById('tickets-grid');
-        if (photosGrid) photosGrid.innerHTML = '';
-        if (ticketsGrid) ticketsGrid.innerHTML = '';
-        notebookContainer.className = 'notebook-container';
-        isTransitioningJournal = false;
-
-        // Reset splash state so it's clickable again
-        if (typeof splashState !== 'undefined') {
-          splashState = 'centered';
-          updateCenteredJournalPosition();
-          document.getElementById('splash-screen').classList.add('focus-journal');
-          if (typeof splashItemInfo !== 'undefined' && splashItemInfo) {
-            splashItemInfo.classList.add('visible');
-          }
-          if (typeof splashClose !== 'undefined' && splashClose) {
-            splashClose.classList.add('visible');
-          }
-        }
-      };
-
-      if (transition.finished) {
-        transition.finished.then(afterExit).catch(afterExit);
-      } else {
-        setTimeout(afterExit, 750);
-      }
-    }, 800);
+      }, 450);
+    }, 260);
   }
 
   // ==========================================================================
@@ -992,13 +929,40 @@ export function initVanillaApp() {
     let mediaEl = null;
 
     if (data.type === 'video') {
-      if (data.videoSrc) {
-        // Local direct WebM video asset
+      if (data.r2Key || data.videoSrc) {
+        // Secure streaming via R2 presigned short-lived URL with local fallback
         const video = document.createElement('video');
-        video.src = data.videoSrc;
         video.controls = true;
         video.autoplay = false;
         video.playsInline = true;
+        video.setAttribute('controlsList', 'nodownload');
+        video.setAttribute('disablePictureInPicture', 'true');
+        video.oncontextmenu = (e) => e.preventDefault();
+
+        const mediaKey = data.r2Key || (data.videoSrc ? data.videoSrc.split('/').pop() : null);
+
+        if (mediaKey) {
+          // Attempt secure temporary stream URL from Vercel Serverless /api/stream
+          fetch(`/api/stream?key=${encodeURIComponent(mediaKey)}`)
+            .then(res => {
+              if (res.ok) return res.json();
+              throw new Error('R2 stream unavailable');
+            })
+            .then(json => {
+              if (json.streamUrl) {
+                video.src = json.streamUrl;
+              } else if (data.videoSrc) {
+                video.src = data.videoSrc;
+              }
+            })
+            .catch(() => {
+              // Fallback to local asset if running locally or offline
+              if (data.videoSrc) video.src = data.videoSrc;
+            });
+        } else if (data.videoSrc) {
+          video.src = data.videoSrc;
+        }
+
         mediaEl = video;
       } else if (data.videoUrl) {
         // External YouTube or Google Drive stream
@@ -1021,6 +985,7 @@ export function initVanillaApp() {
       const img = document.createElement('img');
       img.src = data.src;
       img.alt = data.title || '';
+      img.oncontextmenu = (e) => e.preventDefault();
       mediaEl = img;
 
       const gearRow = document.getElementById('meta-gear-row');
@@ -1076,6 +1041,7 @@ export function initVanillaApp() {
 
       if (detailsModal) {
         detailsModal.classList.add('is-open');
+        document.body.classList.add('modal-open');
         detailsModal.setAttribute('aria-hidden', 'false');
         detailsModal.removeAttribute('inert');
         if (closeDetails) {
@@ -1105,6 +1071,7 @@ export function initVanillaApp() {
 
       if (detailsModal) {
         detailsModal.classList.remove('is-open');
+        document.body.classList.remove('modal-open');
         detailsModal.setAttribute('aria-hidden', 'true');
         detailsModal.setAttribute('inert', 'true');
         if (lastActiveElement) {
@@ -1627,5 +1594,12 @@ setInterval(updateMacTime, 60000);
   // Recalculate centering on window resize
   window.addEventListener('resize', () => {
     domAdapter.updatePhotosTitle(gallery.category, null, false);
+  });
+
+  // Prevent contextmenu downloading on media elements
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('video, img, .modal-wrapper, .photos-grid')) {
+      e.preventDefault();
+    }
   });
 }

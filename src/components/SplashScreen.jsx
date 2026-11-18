@@ -17,15 +17,10 @@ export default function SplashScreen() {
           </div>
 
           <div className="journal-cover">
-            <div className="stitching"></div>
-
+            <div className="journal-crease-line"></div>
             <div className="bookmark-ribbon"></div>
-            <div className="journal-strap">
-              <div className="strap-knot"></div>
-            </div>
-            <div className="journal-pen">
-              <div className="pen-clip"></div>
-            </div>
+            <div className="journal-strap" aria-hidden="true"></div>
+            <div className="journal-monogram" aria-hidden="true">LEO</div>
           </div>
         </div>
         {/* Tooltip */}

@@ -36,6 +36,9 @@ dist/images/Portfolio Imgs/vid/lock_down.webm
 .agnes/
 .agents/
 .codex/
+.gemini/
+graphify-out/
+.graphifyignore
 *.mov
 public/images/portfolio_backup/
 tmp.js

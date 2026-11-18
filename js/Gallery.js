@@ -128,20 +128,36 @@ export default class Gallery {
 
     pagedPhotos.forEach((item, index) => {
       const card = document.createElement('div');
-      card.className = 'scrapbook-photo animate-in';
+      // Dynamic layout formats for an authentic tactile scrapbook
+      const formatType = (index % 4 === 0) ? 'format-polaroid' : (index % 4 === 2) ? 'format-hero' : 'format-standard';
+      card.className = `scrapbook-photo ${formatType} animate-in`;
       card.style.animationDelay = `${index * 0.04}s`;
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', item.description || item.title || 'View photo details');
 
-      const rot = (Math.random() * 4 - 2).toFixed(2);
+      const rot = (Math.random() * 3.6 - 1.8).toFixed(2);
       card.style.transform = `rotate(${rot}deg)`;
 
-      const tapeL = document.createElement('div');
-      tapeL.className = 'photo-tape photo-tape-tl';
-      const tapeR = document.createElement('div');
-      tapeR.className = 'photo-tape photo-tape-tr';
+      // Washi tape placements based on format
+      if (formatType === 'format-polaroid') {
+        const tapeTop = document.createElement('div');
+        tapeTop.className = 'photo-tape photo-tape-top';
+        card.appendChild(tapeTop);
+      } else {
+        const tapeL = document.createElement('div');
+        tapeL.className = 'photo-tape photo-tape-tl';
+        const tapeR = document.createElement('div');
+        tapeR.className = 'photo-tape photo-tape-tr';
+        card.appendChild(tapeL);
+        card.appendChild(tapeR);
+      }
 
       const img = document.createElement('img');
       img.src = item.src;
-      img.alt = item.description || '';
+      img.alt = item.description || item.title || 'Portfolio photograph';
+      img.width = 400;
+      img.height = 300;
       if (index > 2) {
         img.loading = 'lazy';
       } else {
@@ -153,16 +169,23 @@ export default class Gallery {
 
       const caption = document.createElement('div');
       caption.className = 'photo-caption';
-      caption.textContent = item.description ? item.description.substring(0, 36) + (item.description.length > 36 ? '...' : '') : 'Untitled';
+      const rawText = item.description || item.title || 'Untitled';
+      caption.textContent = rawText.length > 34 ? rawText.substring(0, 34).trimEnd() + '…' : rawText;
 
-      card.appendChild(tapeL);
-      card.appendChild(tapeR);
       card.appendChild(img);
       card.appendChild(caption);
 
-      card.addEventListener('click', () => {
+      const openCard = () => {
         this._setActiveClickedImg(img);
         this._onOpenDetails(item);
+      };
+
+      card.addEventListener('click', openCard);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openCard();
+        }
       });
 
       photosGrid.appendChild(card);

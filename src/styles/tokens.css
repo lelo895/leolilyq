@@ -1,6 +1,7 @@
 :root {
   --font-serif: 'EB Garamond', 'Noto Serif SC', Georgia, serif;
   --font-sans: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-handwriting: 'Caveat', cursive, sans-serif;
 
   /* Typography Scale Tokens */
   --text-2xs: 0.65rem;
@@ -43,7 +44,14 @@
   --color-about: oklch(0.40 0.04 260);
   --canvas-bg: oklch(0.30 0.03 260);
   --canvas-dot: rgba(255, 255, 255, 0.1);
-  --leather-color: #4a2e1b;
+  --leather-color: #3e1a12;
+  --leather-highlight: #5a271c;
+  --leather-shadow: #240d08;
+  --gilded-edge: #cda85a;
+  --gilded-edge-dark: #9f7b30;
+  --elastic-strap: #544636;
+  --elastic-strap-dark: #3e3326;
+  --ribbon-color: #b04622;
   --paper-bg: oklch(0.98 0.002 260);
 
   /* Transitions Tokens */
@@ -117,6 +125,13 @@ body.dark-mode {
   --color-about: oklch(0.75 0.05 260);
   --canvas-bg: oklch(0.12 0.01 260);
   --canvas-dot: rgba(255, 255, 255, 0.03);
-  --leather-color: #3a2211;
+  --leather-color: #2c120c;
+  --leather-highlight: #461c14;
+  --leather-shadow: #190805;
+  --gilded-edge: #b59247;
+  --gilded-edge-dark: #7a5c1e;
+  --elastic-strap: #3e3326;
+  --elastic-strap-dark: #2a2219;
+  --ribbon-color: #943717;
   --paper-bg: oklch(0.30 0.01 260);
 }
